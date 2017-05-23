@@ -20,14 +20,6 @@ class Node:
         else:
             raise Exception("Something bad really happened")
 
-    def debug(self, lvl):
-        if self.children is None:
-            return "|" + ("-" * lvl) + str(self.value) + "\n"
-        else:
-            s = ""
-            for k, v in self.children.items():
-                s += "|" + ("-" * lvl) + str(self.name) + "=" + str(k) + ":\n" + v.debug(lvl + 1)
-            return s
 
 
 def learn(data):

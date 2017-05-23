@@ -128,8 +128,5 @@ def create_subset_current_feature(source_data, target_feat, target_value):
     data.features = source_data.get_features() - 1
     data.basic_statistics()
 
-    if source_data._params:  # debug only
-        data._params = [p for p in source_data._params]
-        del data._params[target_feat]
 
     return data
