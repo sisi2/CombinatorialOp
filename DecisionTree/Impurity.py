@@ -27,7 +27,7 @@ class Gini(Impurity):
         score = 0.0  # initial score
         for value in values:
             for group in groups:
-                try:
+                try:  # efficiently handle division by 0 errors
                     proportion = [row[-1] for row in group].count(value) / float(len(group))
                     score += proportion * (1.0 - proportion)
                 except ZeroDivisionError as error:
