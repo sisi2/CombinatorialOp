@@ -79,17 +79,6 @@ class Container:
         """
         return self.training_instances in self.counter.values() or self.features == 1
 
-    def _set_debug(self, p):
-        self._params = p
-
-    def debug(self):
-        s = ""
-        for i in range(self.training_instances):
-
-            for j in range(self.features):
-                s += "\t" + self.data[j][i]
-        print(s)
-
     def set_training_instances(self, val):
         self.training_instances = val
 
@@ -127,6 +116,5 @@ def create_subset_current_feature(source_data, target_feat, target_value):
     del data.data[target_feat]
     data.features = source_data.get_features() - 1
     data.basic_statistics()
-
 
     return data
