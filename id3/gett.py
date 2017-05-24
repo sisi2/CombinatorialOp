@@ -1,5 +1,5 @@
-with open("box.data", 'r') as file:
+with open("tennis.data", 'r') as file:
     for idx, line in enumerate(file.readlines()):
-        if idx == 30:
+        if idx == 2:
             line = line.strip("\n").split(",")
             print(line)

@@ -78,28 +78,25 @@ class Container:
         self._params = p
 
 
-def create_subset(data, target_column, target_value):
-    """
-    Create subset removing param = value
-    :param data: 
-    :param target_column: 
-    :param target_value: 
-    :return: 
+def create_subset(original_data, target_feature, target_value):
+    """Load training data set from other data set while eliminating
+    the parameter param and keeping only the instances where param 
+    had the specificated value. 
     """
     data = Container()
-    data.data = [[] for _ in range(data.n)]
+    data.data = [[] for _ in range(original_data.n)]
     data.nr = 0
-    for i in range(data.nr):
-        if data.data[target_column][i] == target_value:
+    for i in range(original_data.nr):
+        if original_data.data[target_feature][i] == target_value:
             data.nr += 1
-            for j in range(data.n):
-                data.data[j].append(data.data[j][i])
-    del data.data[target_column]
-    data.n = data.n - 1
+            for j in range(original_data.n):
+                data.data[j].append(original_data.data[j][i])
+    del data.data[target_feature]
+    data.n = original_data.n - 1
     data.basic_statistics()
 
-    if data.get_params():  # debug only
-        data._params = [p for p in data.get_params()]
-        del data.params[target_column]
+    if original_data._params:  # debug only
+        data._params = [p for p in original_data._params]
+        del data._params[target_feature]
 
     return data
