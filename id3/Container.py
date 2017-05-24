@@ -5,116 +5,101 @@ from math import log
 class Container:
     def __init__(self):
         self._params = None
-        self.data = None
-        self.training_instances = None
-        self.counter = None
-        self.data_entropy = None
-        self.features = 0
+        self.n = 0
 
-    def get_parameters(self):
-        return self._params
-
-    def set_parameters(self, val):
-        self._params = val
-
-    def load_data(self, file_name, nr_params):
+    def load_from_file(self, file_name, nr_params):
+        """Load training data set from a file in which every line        
+        represent a instance and has values for every parameter 
+        separated by a comma. Last value is the label: unacc,acc,good or vgood.
         """
-            Load training data as comma separated values
-        """
-        self.features = nr_params + 1
-        self.data = [[] for _ in range(self.features)]  # empty list for each param + 1 one for label
+        self.n = nr_params + 1
+        self.data = [[] for _ in range(self.n)]  # empty list for each param + 1 one for label
         f = open(file_name, 'r')
         lines = f.readlines()
         f.close()
-        self.training_instances = len(lines)
+        self.nr = len(lines)
         for line in lines:
-            tokens = line.strip("\n").split(',')
-            for i in range(self.features):
+            line = line[:-1]
+            tokens = line.split(',')
+            for i in range(self.n):
                 self.data[i].append(tokens[i])
         self.basic_statistics()
 
-    @staticmethod
-    def entropy(results, nr):
-        """
-         Compute entropy for target val
-        """
-        entropy = 0.0
+    def entropy(self, results, nr):
+        "Compute entropy for nr"
+        e = 0.0
         for r in results:
-            frequency = float(r) / nr
-            entropy -= frequency * log(frequency, 2) if float(r) != 0.0 else 0
-        return entropy
+            r = float(r)
+            frequency = r / nr
+            e -= (frequency) * log(frequency, 2) if r != 0.0 else 0
+        return e
 
     def basic_statistics(self):
         """
-            Create class features statistics ( class feature : #no_observations)
-            Create data entropy values ( every feature type aka column)
+        Compute basic statistics
+        :return: 
         """
-        self.counter = Counter(self.data[-1])
-        self.data_entropy = self.entropy(self.counter.values(), self.training_instances)
 
-    def entropy_for_category(self, target_category):
+        self.counter = Counter(self.data[-1])
+        self.data_entropy = self.entropy(self.counter.values(), self.nr)
+
+    def get_entropy(self, target_feature):
         """
-            Compute entropy for target category
-            :param target_category:  take a wild guess
-            :return:  entropy value
+        Compute entropy for target feature
+        :param target_feature: 
+        :return: 
         """
-        counts = Counter(self.data[target_category])  # count for each value of parameter
+        counts = Counter(self.data[target_feature])  # count for each value of parameter
         entropy = self.data_entropy
         for k, v in counts.items():
-            count_result = Counter(
-                [self.data[-1][i] for i in range(self.training_instances) if self.data[target_category][i] == k])
-            entropy -= (v / self.training_instances) * self.entropy(count_result.values(), v)
+            count_result = Counter([self.data[-1][i] for i in range(self.nr) if self.data[target_feature][i] == k])
+            entropy -= (v / self.nr) * self.entropy(count_result.values(), v)
         return entropy
 
     def get_all_entropy(self):
-        return [(i, self.entropy_for_category(i)) for i in range(self.features - 1)]
+        return [(i, self.get_entropy(i)) for i in range(self.n - 1)]
 
     def get_best_param(self):
         return sorted(self.get_all_entropy(), key=lambda e: e[1], reverse=True)[0][0]
 
-    def pure(self):
+    def is_final(self):
         """
-            Pure category or 0 remaining features
-            :return: eval
+        Compute stopping condition (set is pure or no more attrs)
         """
-        return self.training_instances in self.counter.values() or self.features == 1
+        return self.nr in self.counter.values() or self.n == 1
 
-    def set_training_instances(self, val):
-        self.training_instances = val
+    def get_params(self):
+        return self._params
 
-    def get_training_instances(self):
-        """
-        Getter for training instances
-        :return: 
-        """
-        return self.training_instances
+    def set_params(self, val):
+        self._params = val
 
-    def get_features(self):
-        """
-        Getter for feature counter
-        :return: 
-        """
-        return self.features
+    def _set_debug(self, p):
+        self._params = p
 
 
-def create_subset_current_feature(source_data, target_feat, target_value):
+def create_subset(data, target_column, target_value):
     """
-      Create subset of source data containing only the target feature with the target value
-      :param source_data: original data
-      :param target_feat: feature predicate
-      :param target_value:  feature value
-      :return:  subset
-      """
+    Create subset removing param = value
+    :param data: 
+    :param target_column: 
+    :param target_value: 
+    :return: 
+    """
     data = Container()
-    data.data = [[] for _ in range(source_data.get_features())]
-    data.set_training_instances(0)
-    for i in range(source_data.get_training_instances()):
-        if source_data.data[target_feat][i] == target_value:
-            data.set_training_instances(data.get_training_instances() + 1)
-            for j in range(source_data.get_features()):
-                data.data[j].append(source_data.data[j][i])
-    del data.data[target_feat]
-    data.features = source_data.get_features() - 1
+    data.data = [[] for _ in range(data.n)]
+    data.nr = 0
+    for i in range(data.nr):
+        if data.data[target_column][i] == target_value:
+            data.nr += 1
+            for j in range(data.n):
+                data.data[j].append(data.data[j][i])
+    del data.data[target_column]
+    data.n = data.n - 1
     data.basic_statistics()
+
+    if data.get_params():  # debug only
+        data._params = [p for p in data.get_params()]
+        del data.params[target_column]
 
     return data
