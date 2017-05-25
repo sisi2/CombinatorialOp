@@ -174,7 +174,10 @@ def classify(observations, tree: C45):
     """
     # TODO missing data
     if tree.node_label is not None:  # leaf
-        return set(tree.node_label.keys())
+        out = ""
+        for i in set(tree.node_label.keys()): out = i
+
+        return out
     else:
         values = observations[tree.class_feature_index]
         branch = None
@@ -311,7 +314,8 @@ def load_tree_and_classify2():
         j = random.randint(0, len(data))
         ll.append(data[j])
     for i in ll:
-        print(classify(i[0], tree), " should get ", i[1])
+        print("Test data: ", str(i[0]))
+        print("Output of the test: \"", classify(i[0], tree), "\"", " should get ", "\"", i[1], "\"")
         # print(classify(["low", "high", "2", "4", "med", "low"], tree))  # should be unacc
 
 
