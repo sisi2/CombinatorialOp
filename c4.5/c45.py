@@ -105,15 +105,11 @@ def build_decision_tree(rows, grow_strategy=entropy):
     bestGain = 0.0
     bestAttribute = None
     bestSets = None
-
     columnCount = len(rows[0]) - 1  # last column is the result/target column
     for col in range(0, columnCount):
         columnValues = [row[col] for row in rows]
-
         for value in columnValues:
             (set1, set2) = build_subset(rows, col, value)
-
-            # Gain -- Entropy or Gini
             p = float(len(set1)) / len(rows)
             gain = currentScore - p * grow_strategy(set1) - (1 - p) * grow_strategy(set2)
             if gain > bestGain and len(set1) > 0 and len(set2) > 0:
@@ -139,7 +135,7 @@ def classify(observations, tree):
     """
     # TODO missing data
     if tree.node_label is not None:  # leaf
-        return tree.node_label
+        return set(tree.node_label.keys())
     else:
         v = observations[tree.class_feature_index]
         branch = None
@@ -161,8 +157,8 @@ def toString(decision_tree, indent=''):
     if decision_tree.node_label is not None:  # leaf node
         return str(decision_tree.node_label)
     decision = 'Column %s: x == %s?' % (decision_tree.class_feature_index, decision_tree.node_label)
-    left_child = indent + 'yes -> ' + toString(decision_tree.left_child, indent + '\t\t')
-    right_child = indent + 'no  -> ' + toString(decision_tree.right_child, indent + '\t\t')
+    left_child = indent + 'yes -> ' + toString(decision_tree.left_child, indent + '     ')
+    right_child = indent + 'no  -> ' + toString(decision_tree.right_child, indent + '      ')
     return decision + '\n' + left_child + '\n' + right_child
 
 
@@ -179,11 +175,10 @@ def load_data(file):
 
 
 if __name__ == '__main__':
-    example = 1
-    if example == 1:
-        # the smaller examples
-        trainingData = load_data('car.data')  # sorry for not translating the TBC and pneumonia symptoms
-        decisionTree = build_decision_tree(trainingData)
-        # decisionTree = growDecisionTreeFrom(trainingData, evaluationFunction=gini) # with gini
-        print(toString(decisionTree))
-        print(classify(["low", "high", "2", "4", "med", "low"], decisionTree))
+    trainingData = load_data('car.data')
+    decisionTree = build_decision_tree(trainingData)
+    print(toString(decisionTree))
+    print("For: " + " ".join(i for i in ["low", "high", "2", "4", "med", "low"]) + " result should be unacc")
+    print(classify(["low", "high", "2", "4", "med", "low"], decisionTree))  # should be unacc
+    print("For : " + " ".join(i for i in ["vhigh", "med", "2", "4", "big", "high", "acc"]) + " result should be acc")
+    print(classify(["vhigh", "med", "2", "4", "big", "high", "acc"], decisionTree))  # should be acc
