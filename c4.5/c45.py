@@ -247,6 +247,7 @@ def save_tree(file_name: str, tree: C45):
     with open(file_name, "wb") as fle:
         import pickle
         pickle.dump(tree, fle)
+        print("Tree saved in \"{0}\"".format(file_name))
 
 
 def load_tree(file_name: str):
@@ -255,15 +256,17 @@ def load_tree(file_name: str):
     :param file_name: name of the file
     :return: 
     """
+    tree = None
     with open(file_name, "rb") as fle:
         import pickle
         tree = pickle.load(fle)
+    return tree
 
 
-def run(input_file, ): pass
+def run(input_file="car.data"): pass
 
 
-if __name__ == '__main__':
+def test1():
     trainingData = load_data('car.data')
     decisionTree = build_decision_tree(trainingData)
     print(print_decision_tree(decisionTree))
@@ -275,3 +278,20 @@ if __name__ == '__main__':
     print(classify(["low", "high", "2", "4", "med", "low"], decisionTree))  # should be unacc
     # print("For : " + " ".join(i for i in ["vhigh", "med", "2", "4", "big", "high", "acc"]) + " result should be acc")
     # print(classify(["vhigh", "med", "2", "4", "big", "high", "acc"], decisionTree))  # should be acc
+
+
+def build_save_tree():
+    trainingData = load_data('car.data')
+    decisionTree = build_decision_tree(trainingData)
+    save_tree("cars.tree", decisionTree)
+
+
+def load_tree_and_classify():
+    tree = load_tree("cars.tree")
+    prune_tree(tree, 0.5, debug=True)
+    print(classify(["low", "high", "2", "4", "med", "low"], tree))  # should be unacc
+
+
+if __name__ == '__main__':
+    # build_save_tree()
+    load_tree_and_classify()
