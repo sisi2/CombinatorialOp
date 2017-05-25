@@ -260,6 +260,9 @@ def load_tree(file_name: str):
         tree = pickle.load(fle)
 
 
+def run(input_file, ): pass
+
+
 if __name__ == '__main__':
     trainingData = load_data('car.data')
     decisionTree = build_decision_tree(trainingData)
