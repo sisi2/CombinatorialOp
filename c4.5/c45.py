@@ -1,4 +1,5 @@
 from math import log
+import uuid
 
 
 class C45:
@@ -7,11 +8,23 @@ class C45:
     """
 
     def __init__(self, col=-1, value=None, left_child=None, right_child=None, label=None):
+        """
+        Constructor
+        :param col: identifier of the column 
+        :param value: stored in the node from original dataset
+        :param left_child: 
+        :param right_child: 
+        :param label: class feature
+        """
         self._class_feature_index = col
         self._value = value  # Feature value stored in the node
         self._left_child = left_child
         self._right_child = right_child
         self._node_label = label  # If leaf store class label, else None
+        self._uuid = uuid.uuid4()
+
+    @property
+    def uuid(self): return self._uuid
 
     @property
     def class_feature_index(self):
@@ -157,10 +170,10 @@ def build_decision_tree(rows: [[]], grow_strategy=entropy):
                 bestSets = (set1, set2)
 
     if bestGain > 0:
-        trueBranch = build_decision_tree(bestSets[0])
-        falseBranch = build_decision_tree(bestSets[1])
-        return C45(col=bestAttribute[0], value=bestAttribute[1], left_child=trueBranch,
-                   right_child=falseBranch)
+        left_child = build_decision_tree(bestSets[0])
+        right_child = build_decision_tree(bestSets[1])
+        return C45(col=bestAttribute[0], value=bestAttribute[1], left_child=left_child,
+                   right_child=right_child)
     else:
         return C45(label=occurences(rows))
 
@@ -174,10 +187,7 @@ def classify(observations, tree: C45):
     """
     # TODO missing data
     if tree.node_label is not None:  # leaf
-        out = ""
-        for i in set(tree.node_label.keys()): out = i
-
-        return out
+        return list(set(tree.node_label.keys()))[0]
     else:
         values = observations[tree.class_feature_index]
         branch = None
@@ -212,21 +222,6 @@ def prune_tree(tree: C45, minGain: float, valuation_function=entropy, debug=Fals
             if debug: print('The branch was pruned with gain = {0}'.format(delta))
             tree.left_child, tree.right_child = None, None
             tree.results = occurences(lchild + rchild)
-
-
-def print_decision_tree(decision_tree: C45, indent=''):
-    """
-    Output decision tree
-    :param decision_tree: input dataset  
-    :param indent: spacing
-    :return: string formatted tree
-    """
-    if decision_tree.node_label is not None:  # leaf node
-        return str(decision_tree.node_label)
-    decision = 'Column %s: x == %s?' % (decision_tree.class_feature_index, decision_tree.node_label)
-    left_child = indent + 'yes -> ' + print_decision_tree(decision_tree.left_child, indent + '     ')
-    right_child = indent + 'no  -> ' + print_decision_tree(decision_tree.right_child, indent + '      ')
-    return decision + '\n' + left_child + '\n' + right_child
 
 
 def load_data(file: str):
@@ -278,6 +273,55 @@ def get_random_test_samples(file="car.data"):
     return ll
 
 
+def print_decision_tree(decision_tree: C45, indent=''):
+    """
+    Output decision tree
+    :param decision_tree: input dataset  
+    :param indent: spacing
+    :return: string formatted tree
+    """
+    if decision_tree.node_label is not None:  # leaf node
+        return str(decision_tree.node_label)
+    decision = 'Column %s: x == %s?' % (decision_tree.class_feature_index, decision_tree.node_label)
+    left_child = indent + 'yes -> ' + print_decision_tree(decision_tree.left_child, indent + '     ')
+    right_child = indent + 'no  -> ' + print_decision_tree(decision_tree.right_child, indent + '      ')
+    return decision + '\n' + left_child + '\n' + right_child
+
+
+def recursive_tree(tree): pass
+
+
+def build_edge(src, dest):
+    add_edges(
+        add_nodes(digraph(), [
+            ('A', {'label': 'Node A'}),
+            ('B', {'label': 'Node B'}),
+            'C'
+        ]),
+        [
+            (('A', 'B'), {'label': 'Edge 1'}),
+            (('A', 'C'), {'label': 'Edge 2'}),
+            ('B', 'C')
+        ]
+    ).render('img/g5')
+
+
+# import graphiz as gv
+
+cter = 0
+
+
+def save_as_image_tree(tree: C45):
+    global cter
+    cter += 1
+    print(cter)
+    print(tree.uuid)
+    if tree.left_child:
+        save_as_image_tree(tree.left_child)
+    if tree.right_child:
+        save_as_image_tree(tree.right_child)
+
+
 def test1():
     trainingData = load_data('car.data')
     decisionTree = build_decision_tree(trainingData)
@@ -306,19 +350,21 @@ def load_tree_and_classify():
 
 def load_tree_and_classify2():
     tree = load_tree("cars.tree")
+    print(print_decision_tree(tree, "  "))
     prune_tree(tree, 0.5, debug=True)
     import random
     data = get_random_test_samples()
     ll = []
     for ftrs in range(random.randint(5, 10)):  # between 5 and 10 samples
-        j = random.randint(0, len(data))
+        j = random.randint(0, len(data) - 1)
         ll.append(data[j])
     for i in ll:
         print("Test data: ", str(i[0]))
         print("Output of the test: \"", classify(i[0], tree), "\"", " should get ", "\"", i[1], "\"")
         # print(classify(["low", "high", "2", "4", "med", "low"], tree))  # should be unacc
+    save_as_image_tree(tree)
 
 
 if __name__ == '__main__':
-    # build_save_tree()
+    # build_save_tree()/
     load_tree_and_classify2()
