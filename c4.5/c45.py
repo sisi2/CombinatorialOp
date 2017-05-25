@@ -7,14 +7,54 @@ class C45:
     """
 
     def __init__(self, col=-1, value=None, left_child=None, right_child=None, label=None):
-        self.class_feature_index = col
-        self.value = value  # Feature value stored in the node
-        self.left_child = left_child
-        self.right_child = right_child
-        self.node_label = label  # If leaf store class label, else None
+        self._class_feature_index = col
+        self._value = value  # Feature value stored in the node
+        self._left_child = left_child
+        self._right_child = right_child
+        self._node_label = label  # If leaf store class label, else None
+
+    @property
+    def class_feature_index(self):
+        return self._class_feature_index
+
+    @class_feature_index.setter
+    def class_feature_index(self, val):
+        self._class_feature_index = val
+
+    @property
+    def value(self):
+        return self._value
+
+    @value.setter
+    def value(self, val):
+        self._value = val
+
+    @property
+    def left_child(self):
+        return self._left_child
+
+    @left_child.setter
+    def left_child(self, val):
+        self._left_child = val
+
+    @property
+    def right_child(self):
+        return self._right_child
+
+    @right_child.setter
+    def right_child(self, val):
+        self._right_child = val
+
+    @property
+    def node_label(self):
+        return self._node_label
+
+    @node_label.setter
+    def node_label(self, val):
+        self._node_label = val
 
 
-def build_subset(data, target_column, target_value):
+def build_subset(data: [[]], target_column: [], target_value: str):
     """
     Build subset from daset, removing target_column with target_value ie class label
     :param data: input dataset
@@ -32,7 +72,7 @@ def build_subset(data, target_column, target_value):
     return subset1, subset2
 
 
-def occurences(rows):
+def occurences(rows: [[]]):
     """
     Compute occurences for class feature
     :param rows: row for wich to compute occurences
@@ -46,7 +86,7 @@ def occurences(rows):
     return results
 
 
-def entropy(data):
+def entropy(data: [[]]):
     """
     Compute the entropy of the dataset
     :param data: dataset
@@ -60,7 +100,7 @@ def entropy(data):
     return entropy
 
 
-def compute_gini_impurity(data):
+def compute_gini_impurity(data: [[]]):
     """
     Compute gini impurity
     :param data: input dataset 
@@ -78,7 +118,7 @@ def compute_gini_impurity(data):
     return imp
 
 
-def compute_variance(rows):
+def compute_variance(rows: [[]]):
     """
     Compute the variance of the dataset
     :param rows: input dataset  
@@ -92,7 +132,7 @@ def compute_variance(rows):
     return variance
 
 
-def build_decision_tree(rows, grow_strategy=entropy):
+def build_decision_tree(rows: [[]], grow_strategy=entropy):
     """
     Build decision tree from data and gain function
     :param rows: dataset
@@ -100,12 +140,11 @@ def build_decision_tree(rows, grow_strategy=entropy):
     :return: decision tree
     """
 
-    if len(rows) == 0: return C45()
+    if len(rows) == 0: return C45()  # empty tree
     currentScore = grow_strategy(rows)
     bestGain = 0.0
-    bestAttribute = None
-    bestSets = None
-    columnCount = len(rows[0]) - 1  # last column is the result/target column
+    bestAttribute, bestSets = None, None
+    columnCount = len(rows[0]) - 1  # only data without class features
     for col in range(0, columnCount):
         columnValues = [row[col] for row in rows]
         for value in columnValues:
@@ -126,7 +165,7 @@ def build_decision_tree(rows, grow_strategy=entropy):
         return C45(label=occurences(rows))
 
 
-def classify(observations, tree):
+def classify(observations, tree: C45):
     """
     Classify data
     :param observations: 
@@ -137,17 +176,42 @@ def classify(observations, tree):
     if tree.node_label is not None:  # leaf
         return set(tree.node_label.keys())
     else:
-        v = observations[tree.class_feature_index]
+        values = observations[tree.class_feature_index]
         branch = None
-
-        if v == tree.value:
+        if values == tree.value:
             branch = tree.left_child
         else:
             branch = tree.right_child
         return classify(observations, branch)
 
 
-def toString(decision_tree, indent=''):
+def prune_tree(tree: C45, minGain: float, valuation_function=entropy, debug=False) -> None:
+    """
+    Recursively prune each subtree using 
+    :param tree: target tree
+    :param minGain: sentinel
+    :param valuation_function: what function to use for evaluation
+    :param debug: print status to terminal
+    :return: 
+    """
+    if tree.left_child.node_label is None:  # internal node
+        prune_tree(tree.left_child, minGain, valuation_function, debug)
+    if tree.right_child.node_label is None:  # internal node
+        prune_tree(tree.right_child, minGain, valuation_function, debug)
+    if tree.left_child.node_label is not None and tree.right_child.node_label is not None:  # both nodes are leaves
+        lchild, rchild = [], []
+        for values, columns in tree.left_child.node_label.items(): lchild += [[values]] * columns
+        for values, columns in tree.right_child.node_label.items(): rchild += [[values]] * columns
+        p = float(len(lchild)) / len(lchild + rchild)
+        delta = valuation_function(lchild + rchild) - p * valuation_function(lchild) - (1 - p) * valuation_function(
+            rchild)
+        if delta < minGain:  # border between pruning
+            if debug: print('The branch was pruned with gain = {0}'.format(delta))
+            tree.left_child, tree.right_child = None, None
+            tree.results = occurences(lchild + rchild)
+
+
+def print_decision_tree(decision_tree: C45, indent=''):
     """
     Output decision tree
     :param decision_tree: input dataset  
@@ -157,16 +221,16 @@ def toString(decision_tree, indent=''):
     if decision_tree.node_label is not None:  # leaf node
         return str(decision_tree.node_label)
     decision = 'Column %s: x == %s?' % (decision_tree.class_feature_index, decision_tree.node_label)
-    left_child = indent + 'yes -> ' + toString(decision_tree.left_child, indent + '     ')
-    right_child = indent + 'no  -> ' + toString(decision_tree.right_child, indent + '      ')
+    left_child = indent + 'yes -> ' + print_decision_tree(decision_tree.left_child, indent + '     ')
+    right_child = indent + 'no  -> ' + print_decision_tree(decision_tree.right_child, indent + '      ')
     return decision + '\n' + left_child + '\n' + right_child
 
 
-def load_data(file):
+def load_data(file: str):
     """
     Load data file (separated comma)
-    :param file: 
-    :return: 
+    :param file: location
+    :return: matrix containing the data
     """
 
     fle = open(file, "r")
@@ -174,11 +238,37 @@ def load_data(file):
     return [[item for item in row.strip("\n").split(",")] for row in reader]
 
 
+def save_tree(file_name: str, tree: C45):
+    """
+    Save decision tree to file
+    :param file_name: name of the file where to save
+    :param tree: target tree to dump
+    """
+    with open(file_name, "wb") as fle:
+        import pickle
+        pickle.dump(tree, fle)
+
+
+def load_tree(file_name: str):
+    """
+    Load a tree model from file
+    :param file_name: name of the file
+    :return: 
+    """
+    with open(file_name, "rb") as fle:
+        import pickle
+        tree = pickle.load(fle)
+
+
 if __name__ == '__main__':
     trainingData = load_data('car.data')
     decisionTree = build_decision_tree(trainingData)
-    print(toString(decisionTree))
+    print(print_decision_tree(decisionTree))
+    print("##################################PRUNED######################################################")
+    prune_tree(decisionTree, 0.5, debug=True)
+    print(print_decision_tree(decisionTree))
+    print("################################################################################################")
     print("For: " + " ".join(i for i in ["low", "high", "2", "4", "med", "low"]) + " result should be unacc")
     print(classify(["low", "high", "2", "4", "med", "low"], decisionTree))  # should be unacc
-    print("For : " + " ".join(i for i in ["vhigh", "med", "2", "4", "big", "high", "acc"]) + " result should be acc")
-    print(classify(["vhigh", "med", "2", "4", "big", "high", "acc"], decisionTree))  # should be acc
+    # print("For : " + " ".join(i for i in ["vhigh", "med", "2", "4", "big", "high", "acc"]) + " result should be acc")
+    # print(classify(["vhigh", "med", "2", "4", "big", "high", "acc"], decisionTree))  # should be acc
