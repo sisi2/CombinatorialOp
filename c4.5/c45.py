@@ -266,6 +266,15 @@ def load_tree(file_name: str):
 def run(input_file="car.data"): pass
 
 
+def get_random_test_samples(file="car.data"):
+    f = open(file, "r")
+    ll = []
+    for lines in f.readlines():
+        lines = lines.strip("\n").split(",")
+        ll.append((lines[:-1], lines[-1]))
+    return ll
+
+
 def test1():
     trainingData = load_data('car.data')
     decisionTree = build_decision_tree(trainingData)
@@ -292,6 +301,20 @@ def load_tree_and_classify():
     print(classify(["low", "high", "2", "4", "med", "low"], tree))  # should be unacc
 
 
+def load_tree_and_classify2():
+    tree = load_tree("cars.tree")
+    prune_tree(tree, 0.5, debug=True)
+    import random
+    data = get_random_test_samples()
+    ll = []
+    for ftrs in range(random.randint(5, 10)):  # between 5 and 10 samples
+        j = random.randint(0, len(data))
+        ll.append(data[j])
+    for i in ll:
+        print(classify(i[0], tree), " should get ", i[1])
+        # print(classify(["low", "high", "2", "4", "med", "low"], tree))  # should be unacc
+
+
 if __name__ == '__main__':
     # build_save_tree()
-    load_tree_and_classify()
+    load_tree_and_classify2()
