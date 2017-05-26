@@ -213,8 +213,11 @@ def prune_tree(tree: C45, minGain: float, valuation_function=entropy, debug=Fals
         prune_tree(tree.right_child, minGain, valuation_function, debug)
     if tree.left_child.node_label is not None and tree.right_child.node_label is not None:  # both nodes are leaves
         lchild, rchild = [], []
-        for values, columns in tree.left_child.node_label.items(): lchild += [[values]] * columns
-        for values, columns in tree.right_child.node_label.items(): rchild += [[values]] * columns
+        for values, columns in tree.left_child.node_label.items():
+            lchild += [[values]] * columns
+        for values, columns in tree.right_child.node_label.items():
+            rchild += [[values]] * columns
+
         p = float(len(lchild)) / len(lchild + rchild)
         delta = valuation_function(lchild + rchild) - p * valuation_function(lchild) - (1 - p) * valuation_function(
             rchild)
@@ -282,7 +285,7 @@ def print_decision_tree(decision_tree: C45, indent=''):
     """
     if decision_tree.node_label is not None:  # leaf node
         return str(decision_tree.node_label)
-    decision = 'Column %s: x == %s?' % (decision_tree.class_feature_index, decision_tree.node_label)
+    decision = 'Column %s: x == %s?' % (decision_tree.class_feature_index, decision_tree.value)
     left_child = indent + 'yes -> ' + print_decision_tree(decision_tree.left_child, indent + '     ')
     right_child = indent + 'no  -> ' + print_decision_tree(decision_tree.right_child, indent + '      ')
     return decision + '\n' + left_child + '\n' + right_child
@@ -314,8 +317,6 @@ cter = 0
 def save_as_image_tree(tree: C45):
     global cter
     cter += 1
-    print(cter)
-    print(tree.uuid)
     if tree.left_child:
         save_as_image_tree(tree.left_child)
     if tree.right_child:
