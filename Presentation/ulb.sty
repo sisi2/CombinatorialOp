@@ -1,0 +1,49 @@
+\mode<presentation>
+\usepackage{pgfcomp-version-0-65}
+\usepackage{xcolor}
+%\usetheme{Madrid}
+\definecolor{ULB}{RGB}{0,76,147}
+\definecolor{ULBpoly}{RGB}{26,23,27}
+\definecolor{ULBdroit}{RGB}{226,0,122}
+\definecolor{ULBarch}{RGB}{144,190,69}
+\definecolor{ULBsopo}{RGB}{0,143,194}
+\definecolor{ULBphilo}{RGB}{133,135,140}
+\definecolor{ULBmed}{RGB}{227,33,25}
+\definecolor{ULBpsy}{RGB}{0,107,179}
+\definecolor{ULBsci}{RGB}{108,80,152}
+\definecolor{ULBsolvay}{RGB}{246,169,36}
+\definecolor{ULBeurope}{RGB}{0,80,154}
+\definecolor{ULBpharm}{RGB}{0,135,81}
+\setbeamertemplate{sidebar canvas left}{
+    {
+   		\includegraphics[angle=90,origin=c,width=1cm,height=4cm]{logo.jpg}}
+     	\vfill
+		\hspace*{0.4cm}\vspace{-0.1px}\colorbox{ULB}{}\\
+		\hspace*{0.4cm}\vspace{-0.1px}\colorbox{ULBpoly}{}\\
+		\hspace*{0.4cm}\vspace{-0.1px}\colorbox{ULBdroit}{}\\
+		\hspace*{0.4cm}\vspace{-0.1px}\colorbox{ULBarch}{}\\
+		\hspace*{0.4cm}\vspace{-0.1px}\colorbox{ULBsopo}{}\\
+		\hspace*{0.4cm}\vspace{-0.1px}\colorbox{ULBphilo}{}\\
+		\hspace*{0.4cm}\vspace{-0.1px}\colorbox{ULBmed}{}\\
+		\hspace*{0.4cm}\vspace{-0.1px}\colorbox{ULBpsy}{}\\
+		\hspace*{0.4cm}\vspace{-0.1px}\colorbox{ULBsci}{}\\
+		\hspace*{0.4cm}\vspace{-0.1px}\colorbox{ULBsolvay}{}\\
+		\hspace*{0.4cm}\vspace{-0.1px}\colorbox{ULBeurope}{}\\
+		\hspace*{0.4cm}\vspace{-0.1px}\colorbox{ULBpharm}{}
+		\vfill
+	}
+\setbeamercolor{frametitle}{fg=blue,bg=blue!50}
+\setbeamertemplate{frametitle}{\vspace*{2.5mm}\hspace*{5mm}\insertframetitle}
+\setbeamercolor{framesubtitle}{fg=blue,bg=blue!50}
+\setbeamertemplate{framesubtitle}{\vspace*{2.5mm}\hspace*{10mm}\insertframesubtitle}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{itemize item}{\scriptsize\raise1.25pt\hbox{\donotcoloroutermaths$\blacktriangleright$}}
+\setbeamertemplate{itemize subitem}{\tiny\raise1.5pt\hbox{\donotcoloroutermaths$\blacktriangleright$}}
+\setbeamertemplate{itemize subsubitem}{\tiny\raise1.5pt\hbox{\donotcoloroutermaths$\blacktriangleright$}}
+\setbeamertemplate{enumerate item}{\insertenumlabel.}
+\setbeamertemplate{enumerate subitem}{\insertenumlabel.\insertsubenumlabel}
+\setbeamertemplate{enumerate subsubitem}{\insertenumlabel.\insertsubenumlabel.\insertsubsubenumlabel}
+\setbeamertemplate{enumerate mini template}{\insertenumlabel}
+
+\mode
+<all> 
