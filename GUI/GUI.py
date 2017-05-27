@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtGui import QIcon
+from PyQt5.QtGui import QIcon, QColor
 from PyQt5.QtWidgets import QPushButton, QHBoxLayout, QAction, QMessageBox, QRadioButton, QApplication, QMainWindow
 from PyQt5 import QtCore, QtGui, QtWidgets
 
@@ -77,10 +77,11 @@ class window(QMainWindow):
         pushButton.setFont(font_important)
         pushButton.clicked.connect(self.setLearn)
         gridLayout.addWidget(pushButton, 1, 4, 1, 1)
-        pushButton = QtWidgets.QPushButton("Predict", self.gridLayoutWidget)
-        pushButton.setFont(font_important)
-        pushButton.clicked.connect(self.setPredict)
-        gridLayout.addWidget(pushButton, 4, 4, 1, 1)
+        self.predictButton = QtWidgets.QPushButton("Predict", self.gridLayoutWidget)
+        self.predictButton.setFont(font_important)
+        self.predictButton.setEnabled(False)
+        self.predictButton.clicked.connect(self.setPredict)
+        gridLayout.addWidget(self.predictButton, 4, 4, 1, 1)
         pushButton = QtWidgets.QPushButton("Plot", self.gridLayoutWidget)
         pushButton.setFont(font)
         pushButton.clicked.connect(self.setPlot)
@@ -115,12 +116,26 @@ class window(QMainWindow):
         self.fileLabel.setFont(font)
         gridLayout.addWidget(self.fileLabel, 0, 3, 1, 1)
 
-        self.pruneLabel = QtWidgets.QLineEdit(gridLayoutWidget)
-        self.pruneLabel.setEnabled(False)
-        font = QtGui.QFont()
-        font.setPointSize(self.qline_size)
-        self.pruneLabel.setFont(font)
-        gridLayout.addWidget(self.pruneLabel, 3, 3, 1, 1)
+        # self.pruneLabel = QtWidgets.QLineEdit(gridLayoutWidget)
+        # self.pruneLabel.setEnabled(False)
+        # font = QtGui.QFont()
+        # font.setPointSize(self.qline_size)
+        # self.pruneLabel.setFont(font)
+        # gridLayout.addWidget(self.pruneLabel, 3, 3, 1, 1)
+
+        self.lcdNumber = QtWidgets.QLCDNumber(gridLayoutWidget)
+        self.lcdNumber.setEnabled(False)
+        self.lcdNumber.display(0.0)
+        self.lcdNumber.setFixedWidth(80)
+        self.lcdNumber.setFixedHeight(30)
+        gridLayout.addWidget(self.lcdNumber, 3, 4, 1, 1)       
+
+        self.horizontalScrollBar = QtWidgets.QScrollBar(gridLayoutWidget)
+        self.horizontalScrollBar.setEnabled(False)
+        self.horizontalScrollBar.setOrientation(QtCore.Qt.Horizontal)
+        self.horizontalScrollBar.sliderMoved.connect(self.on_slider_move)
+        self.horizontalScrollBar.setFixedHeight(20)
+        gridLayout.addWidget(self.horizontalScrollBar, 3, 3, 1, 1)
 
         self.predictionLabel = QtWidgets.QLineEdit(gridLayoutWidget)
         self.predictionLabel.setEnabled(True)
@@ -129,10 +144,13 @@ class window(QMainWindow):
         self.predictionLabel.setFont(font)
         gridLayout.addWidget(self.predictionLabel, 4, 3, 1, 1)
 
-
     def setupUi(self, MainWindow):
         MainWindow.setWindowTitle("Techniques of Artificial Intelligence")
         MainWindow.resize(600, 300)
+
+        palette = QtGui.QPalette()
+        palette.setColor(QtGui.QPalette.Background, QColor("#fff7d1"))
+        self.setPalette(palette)
 
         self.centralwidget = QtWidgets.QWidget(MainWindow)
 
@@ -179,14 +197,17 @@ class window(QMainWindow):
                 self.container.load_from_file(filePath, len(columnNames)-1)
                 self.tree = learn(self.container)
 
+                self.predictButton.setEnabled(True)
                 #print(list(set(self.container.data[0])))
                 print("ID3")
 
             elif(self.radioButtonC45.isChecked()):
-                pruneVal = float(self.pruneLabel.text())
+                pruneVal = float(self.lcdNumber.value())
                 trainingData = load_data(filePath)
                 self.tree = build_decision_tree(trainingData)
                 prune_tree(self.tree, pruneVal, debug=False)
+
+                self.predictButton.setEnabled(True)
                 print("C4.5")
         except:
             print("Learning Error")
@@ -208,11 +229,17 @@ class window(QMainWindow):
     def setPlot(self):
         """TO DO"""
 
+    def on_slider_move(self, value):
+        roundedVal = round(value/100, 1)
+        self.lcdNumber.display(roundedVal)
+
     def changePruneState(self, radioButton):
         if radioButton.isChecked() == True:
-            self.pruneLabel.setEnabled(True)
+            self.lcdNumber.setEnabled(True)
+            self.horizontalScrollBar.setEnabled(True)
         else:
-            self.pruneLabel.setEnabled(False)  
+            self.lcdNumber.setEnabled(False)  
+            self.horizontalScrollBar.setEnabled(False) 
 
     def dragEnterEvent(self, event):
         if event.mimeData().hasUrls():
@@ -229,6 +256,7 @@ class window(QMainWindow):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    # app.setStyleSheet('QMainWindow{background-color: darkgray;border: 2px solid black;}')
     Gui = window()
     sys.exit(app.exec_())
     #overcast, hot, high, false
