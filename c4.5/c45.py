@@ -291,7 +291,20 @@ def print_decision_tree(decision_tree: C45, indent=''):
     return decision + '\n' + left_child + '\n' + right_child
 
 
-def recursive_tree(tree): pass
+def build_node(): pass
+
+
+dta = []
+
+
+def recursive_tree(tree: C45):
+    global dta
+    if tree.left_child:
+        dta.append((tree, tree.left_child, "yes"))
+        return recursive_tree(tree.left_child)
+    if tree.right_child:
+        dta.append((tree, tree.right_child, "no"))
+        recursive_tree(recursive_tree(tree.right_child))
 
 
 def build_edge(src, dest):
@@ -312,15 +325,6 @@ def build_edge(src, dest):
 # import graphiz as gv
 
 cter = 0
-
-
-def save_as_image_tree(tree: C45):
-    global cter
-    cter += 1
-    if tree.left_child:
-        save_as_image_tree(tree.left_child)
-    if tree.right_child:
-        save_as_image_tree(tree.right_child)
 
 
 def test1():
@@ -349,6 +353,40 @@ def load_tree_and_classify():
     print(classify(["low", "high", "2", "4", "med", "low"], tree))  # should be unacc
 
 
+class Cont:
+    def __init__(self):
+        self._data = []
+
+    @property
+    def data(self): return self._data
+
+    @data.setter
+    def data(self, val): self._data.appen()
+
+    def __repr__(self): return self._data
+
+    def __str__(self): return str(self.__repr__())
+
+    def __len__(self): return len(self.data)
+
+
+def save_as_image_tree(tree: C45):
+    cont = Cont()
+
+    def rec_stat(tree: C45, cont: Cont):
+        if tree.node_label:
+            cont.data.append()
+        if tree.left_child:
+            cont.data.append((tree, tree.left_child, "yes"))
+            return rec_stat(tree.left_child, cont)
+        if tree.right_child:
+            cont.data.append((tree, tree.right_child, "no"))
+            return rec_stat(tree.right_child, cont)
+
+    rec_stat(tree, cont)
+    return cont
+
+
 def load_tree_and_classify2():
     tree = load_tree("cars.tree")
     print(print_decision_tree(tree, "  "))
@@ -363,7 +401,10 @@ def load_tree_and_classify2():
         print("Test data: ", str(i[0]))
         print("Output of the test: \"", classify(i[0], tree), "\"", " should get ", "\"", i[1], "\"")
         # print(classify(["low", "high", "2", "4", "med", "low"], tree))  # should be unacc
-    save_as_image_tree(tree)
+    print(save_as_image_tree(tree))
+    for i in save_as_image_tree(tree).data:
+        print(i[0].value, i[1].node_label)
+    print(dta)
 
 
 if __name__ == '__main__':
