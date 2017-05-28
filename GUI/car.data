@@ -1455,7 +1455,6 @@ low,high,3,more,med,med,acc
 low,high,3,more,med,high,vgood
 low,high,3,more,big,low,unacc
 low,high,3,more,big,med,acc
-low,high,3,more,big,high,vgood
 low,high,4,2,small,low,unacc
 low,high,4,2,small,med,unacc
 low,high,4,2,small,high,unacc

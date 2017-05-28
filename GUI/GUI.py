@@ -11,7 +11,7 @@ from c45 import *
 
 
 labels = {'tennis.data': ["weather", "temp", "wind", "other", "play"],
-          'car.data': ["buying", "maint", "doors", "persons", "lug_boot", "safety"]}
+          'ca.data': ["buying", "maint", "doors", "persons", "lug_boot", "safety", "output"]}
 
 
 def load_recent_files():
@@ -82,9 +82,9 @@ class window(QMainWindow):
         self.predictButton.setEnabled(False)
         self.predictButton.clicked.connect(self.setPredict)
         gridLayout.addWidget(self.predictButton, 4, 4, 1, 1)
-        pushButton = QtWidgets.QPushButton("Plot", self.gridLayoutWidget)
+        pushButton = QtWidgets.QPushButton("Erase", self.gridLayoutWidget)
         pushButton.setFont(font)
-        pushButton.clicked.connect(self.setPlot)
+        pushButton.clicked.connect(self.setErase)
         gridLayout.addWidget(pushButton, 5, 4, 1, 1)
 
     def setupRadioButtons(self, gridLayoutWidget, gridLayout):
@@ -189,7 +189,13 @@ class window(QMainWindow):
             dataName = filePath.split("/")[-1]
             columnNames = labels[dataName]
         except:
-            print("Data not known")
+            # If data not known, just give random column names
+            columnNames = []
+            f = open(filePath, 'r')
+            lines = f.readlines()
+            nbColumns = len(lines[0].split(","))
+            for i in range(nbColumns):
+                columnNames.append(str(i))
         try:
             if(self.radioButtonID3.isChecked()):
                 self.container = Container()
@@ -226,8 +232,8 @@ class window(QMainWindow):
         except:
             self.outputLabel.setText("Error")
 
-    def setPlot(self):
-        """TO DO"""
+    def setErase(self):
+        self.outputLabel.setText("")
 
     def on_slider_move(self, value):
         roundedVal = round(value/100, 1)
