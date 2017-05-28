@@ -73,7 +73,7 @@
 \vfill
 \item C45 implementation based on  a binary tree (computational gain)
 \vfill
-\item $\rightarrow$ Everithing equal or smaller than node value to the left
+\item $\rightarrow$ Everything equal or smaller than node value to the left
 \vfill
 \item $\rightarrow$ Everything else to the right
 \end{itemize}
@@ -103,7 +103,7 @@
 \item 2 strategies:
 \vfill
 \begin{itemize}
-\item Pre-prune
+\item \textbf{Pre-prune:}
 \vfill
 \begin{itemize}
 \item Using statistical signifiance
@@ -116,15 +116,22 @@
 \vfill
 \end{itemize}
 \framebreak
-\item Post-prune:
+\item \textbf{Post-prune:}
 \begin{itemize}
 \item Subtree replacement
+\vfill
 \item $\rightarrow$ Replace subtree with leaf
+\vfill
 \item $\rightarrow$ Stop when additional pruning is harmful
+\vfill
 \item $\rightarrow$ Accuracy default/user given
+\vfill
 \item $\rightarrow$ Usinga validation test-set (derived from original)
+\vfill
 \item Subtree raising
+\vfill
 \item $\rightarrow$ Delete node \& redistribute instances
+\vfill
 \item $\rightarrow$ Slower than replacement strategy
 \end{itemize}
 \end{itemize}
@@ -138,5 +145,21 @@
 \frametitle{Pruning}
 \begin{itemize}
 \item Example avec notre code
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{C4.5 - last slide, we promise}
+\begin{itemize}
+\item Implementation differences to ID3
+\begin{itemize}
+\vfill
+\item First test for missing values and replace
+\vfill
+\item When splitting apply rule for numerical values
+\vfill
+\item After growing the tree: prune
+\vfill
+\end{itemize}
 \end{itemize}
 \end{frame}
