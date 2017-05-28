@@ -214,7 +214,7 @@ def prune_tree(tree: C45, minGain: float, valuation_function=entropy, debug=Fals
             tree.results = occurences(lchild + rchild)
 
 
-def print_decision_tree(decision_tree: C45, indent=''):
+def print_decision_tree(decision_tree: C45, indent: str = ''):
     """
     Output decision tree
     :param decision_tree: input dataset  

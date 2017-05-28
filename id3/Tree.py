@@ -1,6 +1,6 @@
 from copy import deepcopy
 
-from Container import create_subset
+from id3.Container import create_subset
 
 
 class Node:

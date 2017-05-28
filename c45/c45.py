@@ -320,5 +320,5 @@ def load_tree_and_classify2():
 
 
 if __name__ == '__main__':
-    # build_save_tree()
+    build_save_tree()
     load_tree_and_classify2()

@@ -2,13 +2,11 @@ import sys
 from PyQt5.QtGui import QIcon, QColor
 from PyQt5.QtWidgets import QPushButton, QHBoxLayout, QAction, QMessageBox, QRadioButton, QApplication, QMainWindow
 from PyQt5 import QtCore, QtGui, QtWidgets
-
-from Container import Container
-from Container import create_subset
-from Tree import learn
+from id3.Container import Container
+from id3.Container import create_subset
+from id3.Tree import learn
 from collections import Counter
-from c45 import *
-
+from c45.c45 import *
 
 labels = {'tennis.data': ["weather", "temp", "wind", "other", "play"],
           'ca.data': ["buying", "maint", "doors", "persons", "lug_boot", "safety", "output"]}
@@ -28,93 +26,111 @@ def save_recents(pwd):
 
 
 class window(QMainWindow):
+    """
+        Class implementing a window for the awesome proejct we have
+    """
+
     def __init__(self):
+        """
+        Constructor
+        """
         super(window, self).__init__()
+        self.setWindowIcon(QtGui.QIcon('logo.png'))
         self.constants()
         self.setupUi(self)
         self.setAcceptDrops(True)
         self.show()
 
     def constants(self):
+        """
+        Definition of border constants
+        :return: 
+        """
         self.qline_size = 12
         self.btn_text_size = 14
         self.label_text_size = 15
         self.radiobtn_text_size = 15
 
-    def setupLabels(self, gridLayoutWidget, gridLayout):
+    def setup_labels(self, gridLayoutWidget, gridLayout):
+        """
+        Create labels for window
+        :param gridLayoutWidget: 
+        :param gridLayout: 
+        :return: 
+        """
         font = QtGui.QFont()
         font.setPointSize(self.label_text_size)
-        font.setBold(True)    
+        font.setBold(True)
 
-        label = QtWidgets.QLabel("File", gridLayoutWidget)    
+        label = QtWidgets.QLabel("File", gridLayoutWidget)
         label.setFont(font)
         gridLayout.addWidget(label, 0, 0, 1, 1)
-        label = QtWidgets.QLabel("Algo", gridLayoutWidget)    
+        label = QtWidgets.QLabel("Algo", gridLayoutWidget)
         label.setFont(font)
         gridLayout.addWidget(label, 1, 0, 1, 1)
-        label = QtWidgets.QLabel("Prune", gridLayoutWidget)    
+        label = QtWidgets.QLabel("Prune", gridLayoutWidget)
         label.setFont(font)
         gridLayout.addWidget(label, 3, 0, 1, 1)
-        label = QtWidgets.QLabel("Prediction  ", gridLayoutWidget)    
+        label = QtWidgets.QLabel("Prediction  ", gridLayoutWidget)
         label.setFont(font)
         gridLayout.addWidget(label, 4, 0, 1, 1)
-        label = QtWidgets.QLabel("Output", gridLayoutWidget)    
+        label = QtWidgets.QLabel("Output", gridLayoutWidget)
         label.setFont(font)
         gridLayout.addWidget(label, 5, 0, 1, 1)
 
-    def setupButtons(self, gridLayoutWidget, gridLayout):
+    def setup_buttons(self, gridLayoutWidget, grid_layout):
         font = QtGui.QFont()
         font.setPointSize(self.btn_text_size)
         font_important = QtGui.QFont()
         font_important.setPointSize(self.btn_text_size)
         font_important.setBold(True)
 
-        pushButton = QtWidgets.QPushButton("Open", self.gridLayoutWidget)
-        pushButton.setFont(font)
-        pushButton.clicked.connect(self.setFileName)
-        gridLayout.addWidget(pushButton, 0, 4, 1, 1)
-        pushButton = QtWidgets.QPushButton("Learn", self.gridLayoutWidget)
-        pushButton.setFont(font_important)
-        pushButton.clicked.connect(self.setLearn)
-        gridLayout.addWidget(pushButton, 1, 4, 1, 1)
-        self.predictButton = QtWidgets.QPushButton("Predict", self.gridLayoutWidget)
+        push_button = QtWidgets.QPushButton("Open", self.grid_layout_widget)
+        push_button.setFont(font)
+        push_button.clicked.connect(self.set_file_name)
+        grid_layout.addWidget(push_button, 0, 4, 1, 1)
+        push_button = QtWidgets.QPushButton("Learn", self.grid_layout_widget)
+        push_button.setFont(font_important)
+        push_button.clicked.connect(self.set_learn)
+        grid_layout.addWidget(push_button, 1, 4, 1, 1)
+        self.predictButton = QtWidgets.QPushButton("Predict", self.grid_layout_widget)
         self.predictButton.setFont(font_important)
         self.predictButton.setEnabled(False)
-        self.predictButton.clicked.connect(self.setPredict)
-        gridLayout.addWidget(self.predictButton, 4, 4, 1, 1)
-        pushButton = QtWidgets.QPushButton("Erase", self.gridLayoutWidget)
+        self.predictButton.clicked.connect(self.set_predict)
+        grid_layout.addWidget(self.predictButton, 4, 4, 1, 1)
+        pushButton = QtWidgets.QPushButton("Erase", self.grid_layout_widget)
         pushButton.setFont(font)
-        pushButton.clicked.connect(self.setErase)
-        gridLayout.addWidget(pushButton, 5, 4, 1, 1)
+        pushButton.clicked.connect(self.set_erase)
+        grid_layout.addWidget(pushButton, 5, 4, 1, 1)
 
-    def setupRadioButtons(self, gridLayoutWidget, gridLayout):
+    def setup_radio_buttons(self, gridLayoutWidget, gridLayout):
         font = QtGui.QFont()
         font.setPointSize(self.radiobtn_text_size)
 
-        horizontalLayout = QtWidgets.QHBoxLayout()
+        horizontal_layout = QtWidgets.QHBoxLayout()
 
-        self.radioButtonID3 = QtWidgets.QRadioButton("ID3", gridLayoutWidget)
-        self.radioButtonID3.setFont(font)
-        self.radioButtonID3.setChecked(True)
+        self.radio_Button_ID3 = QtWidgets.QRadioButton("ID3", gridLayoutWidget)
+        self.radio_Button_ID3.setFont(font)
+        self.radio_Button_ID3.setChecked(True)
 
-        horizontalLayout.addWidget(self.radioButtonID3)
+        horizontal_layout.addWidget(self.radio_Button_ID3)
 
-        self.radioButtonC45 = QtWidgets.QRadioButton("C4.5", self.gridLayoutWidget)
-        self.radioButtonC45.setFont(font)
-        self.radioButtonC45.setChecked(False)
-        self.radioButtonC45.toggled.connect(lambda:self.changePruneState(self.radioButtonC45))
+        self.radio_button_C45 = QtWidgets.QRadioButton("C4.5", self.grid_layout_widget)
+        self.radio_button_C45.setFont(font)
+        self.radio_button_C45.setChecked(False)
+        self.radio_button_C45.toggled.connect(lambda: self.change_prune_State(self.radio_button_C45))
 
-        horizontalLayout.addWidget(self.radioButtonC45)
+        horizontal_layout.addWidget(self.radio_button_C45)
 
-        gridLayout.addLayout(horizontalLayout, 1, 3, 1, 1)
+        gridLayout.addLayout(horizontal_layout, 1, 3, 1, 1)
 
     def setupQLine(self, gridLayoutWidget, gridLayout):
 
-        self.fileLabel = QtWidgets.QLineEdit(gridLayoutWidget)
+        self.file_label = QtWidgets.QLineEdit(gridLayoutWidget)
         font = QtGui.QFont()
         font.setPointSize(self.qline_size)
-        self.fileLabel.setFont(font)
-        gridLayout.addWidget(self.fileLabel, 0, 3, 1, 1)
+        self.file_label.setFont(font)
+        gridLayout.addWidget(self.file_label, 0, 3, 1, 1)
 
         # self.pruneLabel = QtWidgets.QLineEdit(gridLayoutWidget)
         # self.pruneLabel.setEnabled(False)
@@ -128,7 +144,7 @@ class window(QMainWindow):
         self.lcdNumber.display(0.0)
         self.lcdNumber.setFixedWidth(80)
         self.lcdNumber.setFixedHeight(30)
-        gridLayout.addWidget(self.lcdNumber, 3, 4, 1, 1)       
+        gridLayout.addWidget(self.lcdNumber, 3, 4, 1, 1)
 
         self.horizontalScrollBar = QtWidgets.QScrollBar(gridLayoutWidget)
         self.horizontalScrollBar.setEnabled(False)
@@ -152,65 +168,64 @@ class window(QMainWindow):
         palette.setColor(QtGui.QPalette.Background, QColor("#fff7d1"))
         self.setPalette(palette)
 
-        self.centralwidget = QtWidgets.QWidget(MainWindow)
+        self.central_widget = QtWidgets.QWidget(MainWindow)
 
-        self.gridLayoutWidget = QtWidgets.QWidget(self.centralwidget)
-        self.gridLayoutWidget.setGeometry(QtCore.QRect(26, 10, 530, 280))
+        self.grid_layout_widget = QtWidgets.QWidget(self.central_widget)
+        self.grid_layout_widget.setGeometry(QtCore.QRect(26, 10, 530, 280))
 
-        self.gridLayout = QtWidgets.QGridLayout(self.gridLayoutWidget)
-        self.gridLayout.setSizeConstraint(QtWidgets.QLayout.SetDefaultConstraint)
-        self.gridLayout.setContentsMargins(5, 0, 0, 0)
-        self.gridLayout.setHorizontalSpacing(20)
-        self.gridLayout.setVerticalSpacing(10)
+        self.grid_layout = QtWidgets.QGridLayout(self.grid_layout_widget)
+        self.grid_layout.setSizeConstraint(QtWidgets.QLayout.SetDefaultConstraint)
+        self.grid_layout.setContentsMargins(5, 0, 0, 0)
+        self.grid_layout.setHorizontalSpacing(20)
+        self.grid_layout.setVerticalSpacing(10)
 
-        self.setupLabels(self.gridLayoutWidget, self.gridLayout)
-        self.setupButtons(self.gridLayoutWidget, self.gridLayout)
-        self.setupRadioButtons(self.gridLayoutWidget, self.gridLayout)
-        self.setupQLine(self.gridLayoutWidget, self.gridLayout)
+        self.setup_labels(self.grid_layout_widget, self.grid_layout)
+        self.setup_buttons(self.grid_layout_widget, self.grid_layout)
+        self.setup_radio_buttons(self.grid_layout_widget, self.grid_layout)
+        self.setupQLine(self.grid_layout_widget, self.grid_layout)
 
-        self.outputLabel = QtWidgets.QLabel(self.gridLayoutWidget)
+        self.output_label = QtWidgets.QLabel(self.grid_layout_widget)
         font = QtGui.QFont()
         font.setPointSize(self.qline_size)
-        self.outputLabel.setFont(font)
-        self.gridLayout.addWidget(self.outputLabel, 5, 3, 1, 1)
+        self.output_label.setFont(font)
+        self.grid_layout.addWidget(self.output_label, 5, 3, 1, 1)
 
-        MainWindow.setCentralWidget(self.centralwidget)
+        MainWindow.setCentralWidget(self.central_widget)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-    def setFileName(self):
+    def set_file_name(self):
         from tkinter import Tk, filedialog
         Tk().withdraw()
-        fileName = filedialog.askopenfilename()
-        self.fileLabel.setText("" + fileName)
+        file_name = filedialog.askopenfilename()
+        self.file_label.setText("" + file_name)
 
-    def setLearn(self):
+    def set_learn(self):
         try:
-            filePath = self.fileLabel.text()
-            dataName = filePath.split("/")[-1]
+            file_path = self.file_label.text()
+            dataName = file_path.split("/")[-1]
             columnNames = labels[dataName]
         except:
             # If data not known, just give random column names
             columnNames = []
-            f = open(filePath, 'r')
+            f = open(file_path, 'r')
             lines = f.readlines()
             nbColumns = len(lines[0].split(","))
             for i in range(nbColumns):
                 columnNames.append(str(i))
         try:
-            if(self.radioButtonID3.isChecked()):
+            if self.radio_Button_ID3.isChecked():
                 self.container = Container()
                 self.container._set_debug(columnNames)
-                self.container.load_from_file(filePath, len(columnNames)-1)
+                self.container.load_from_file(file_path, len(columnNames) - 1)
                 self.tree = learn(self.container)
 
                 self.predictButton.setEnabled(True)
-                #print(list(set(self.container.data[0])))
                 print("ID3")
 
-            elif(self.radioButtonC45.isChecked()):
+            elif self.radio_button_C45.isChecked():
                 pruneVal = float(self.lcdNumber.value())
-                trainingData = load_data(filePath)
-                self.tree = build_decision_tree(trainingData)
+                training_data = load_data(file_path)
+                self.tree = build_decision_tree(training_data)
                 prune_tree(self.tree, pruneVal, debug=False)
 
                 self.predictButton.setEnabled(True)
@@ -218,34 +233,33 @@ class window(QMainWindow):
         except:
             print("Learning Error")
 
-
-    def setPredict(self):
+    def set_predict(self):
         try:
-            toPredict = self.predictionLabel.text()
-            toPredict = [x.strip() for x in toPredict.split(',')]
-            if(self.radioButtonID3.isChecked()):
-                prediction = self.tree.decide(toPredict)
-                self.outputLabel.setText(prediction)
-            elif(self.radioButtonC45.isChecked()):
-                prediction = classify(toPredict, self.tree)
-                self.outputLabel.setText(prediction)
+            to_predict = self.predictionLabel.text()
+            to_predict = [x.strip() for x in to_predict.split(',')]
+            if self.radio_Button_ID3.isChecked():
+                prediction = self.tree.decide(to_predict)
+                self.output_label.setText(prediction)
+            elif self.radio_button_C45.isChecked():
+                prediction = classify(to_predict, self.tree)
+                self.output_label.setText(prediction)
         except:
-            self.outputLabel.setText("Error")
+            self.output_label.setText("Error")
 
-    def setErase(self):
-        self.outputLabel.setText("")
+    def set_erase(self):
+        self.output_label.setText("")
 
     def on_slider_move(self, value):
-        roundedVal = round(value/100, 1)
+        roundedVal = round(value / 100, 1)
         self.lcdNumber.display(roundedVal)
 
-    def changePruneState(self, radioButton):
-        if radioButton.isChecked() == True:
+    def change_prune_State(self, radioButton):
+        if radioButton.isChecked():
             self.lcdNumber.setEnabled(True)
             self.horizontalScrollBar.setEnabled(True)
         else:
-            self.lcdNumber.setEnabled(False)  
-            self.horizontalScrollBar.setEnabled(False) 
+            self.lcdNumber.setEnabled(False)
+            self.horizontalScrollBar.setEnabled(False)
 
     def dragEnterEvent(self, event):
         if event.mimeData().hasUrls():
@@ -257,7 +271,7 @@ class window(QMainWindow):
         for url in event.mimeData().urls():
             path = url.toLocalFile()
             print(path)
-            self.fileLabel.setText("" + path)
+            self.file_label.setText("" + path)
 
 
 if __name__ == "__main__":
@@ -265,5 +279,5 @@ if __name__ == "__main__":
     # app.setStyleSheet('QMainWindow{background-color: darkgray;border: 2px solid black;}')
     Gui = window()
     sys.exit(app.exec_())
-    #overcast, hot, high, false
-    #med,med,2,4,big,high
+    # overcast, hot, high, false
+    # med,med,2,4,big,high
