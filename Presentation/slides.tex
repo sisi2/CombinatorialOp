@@ -1,4 +1,7 @@
 \documentclass{beamer}
+\usepackage{listings}
+\usepackage{amsmath}
+
 \usepackage{ulb}
 \title{Implementation of Decision Tree Classifiers\\
 ID3 versus C4.5}
@@ -49,10 +52,10 @@ ID3 versus C4.5}
 \begin{frame}
 \frametitle{Classification}
 	\begin{itemize}
-		\item Well known example: is it a good day to play tennis?
+		\item Classical example: play tennis today?
 		\vfill
 		\begin{itemize}
-			\item Features:
+			\item \textbf{Features}:
 			\begin{itemize}
 				\item Outlook: sunny, overcast, rainy
 				\vfill
@@ -63,7 +66,7 @@ ID3 versus C4.5}
 				\item Humidity: high, normal
 			\end{itemize}
 			\vfill
-			\item Labels:
+			\item \textbf{Class labels}:
 				\begin{itemize}
 				\item Yes
 				\vfill
@@ -77,9 +80,9 @@ ID3 versus C4.5}
 \begin{frame}
 \frametitle{Decision Tree}
 	\begin{itemize}
-		\item Model is easy to understand for users (visual)
+		\item Visual model, easily understandable
 		\vfill
-		\item Final result is a tree with decision nodes and leaf nodes
+		\item Model: tree with decision and leaf nodes
 	\end{itemize}
 	\begin{center}
 		\includegraphics[scale=0.35]{Images/DecisionTree.png}
@@ -88,11 +91,32 @@ ID3 versus C4.5}
 \end{frame}
 
 \begin{frame}
+\frametitle{Premise}
+\begin{itemize}
+\item Given a training data-set 
+\vfill
+\item Recursively split on a node:
+\vfill
+\item If node is pure return leaf (class value)
+\vfill
+\item Else compute entropy \& info gain:
+\begin{itemize}
+\vfill
+\item Shannon's entropy: $E(S)= \sum_{i}{} - p_i log_2(p_i) $
+\vfill
+\item Subtree gain: $Gain(T,X)=E(T)-E(T,X)$
+\vfill
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
 \frametitle{ID3 versus C4.5}
 	\begin{itemize}
-		\item Goal: construct the decision tree using ID3 and C4.5 algorithms
+		\item Goal: implement ID3 and C4.5 algorithms
 		\vfill
-		\item Objectives: compare ID3 and C4.5 and creating 
+		\item Objectives: compare ID3 and C4.5 output
 		\vfill
 		\begin{itemize}
 			\item Compare ID3 and C4.5
@@ -106,6 +130,12 @@ ID3 versus C4.5}
 
 \begin{frame}
 \frametitle{ID3}
+\begin{itemize}
+\item Initial implementation of decision trees
+\item Top down approach
+\item Split current node based on information gain:
+
+\end{itemize}
 
 \end{frame}
 
