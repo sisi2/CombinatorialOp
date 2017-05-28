@@ -2,7 +2,7 @@ import sys
 from PyQt5.QtGui import QIcon, QColor
 from PyQt5.QtWidgets import QPushButton, QHBoxLayout, QAction, QMessageBox, QRadioButton, QApplication, QMainWindow
 from PyQt5 import QtCore, QtGui, QtWidgets
-from ..id3.Container import Container
+from id3.Container import Container
 from id3.Container import create_subset
 from id3.Tree import learn
 from collections import Counter

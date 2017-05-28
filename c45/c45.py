@@ -132,37 +132,36 @@ def compute_variance(rows: [[]]):
     return variance
 
 
-def build_decision_tree(rows: [[]], grow_strategy=entropy):
+def build_decision_tree(input_dataset: [[]], expand_strategy=entropy):
     """
     Build decision tree from data and gain function
-    :param rows: dataset
-    :param grow_strategy: information gain property
+    :param input_dataset: dataset
+    :param expand_strategy: information gain property
     :return: decision tree
     """
 
-    if len(rows) == 0: return C45()  # empty tree
-    currentScore = grow_strategy(rows)
-    bestGain = 0.0
-    bestAttribute, bestSets = None, None
-    # column_count = len(rows[0]) - 1  # only data without class features
-    for col in range(len(rows[0]) - 1):
-        column_values = [row[col] for row in rows]
+    if len(input_dataset) == 0: return C45()  # empty tree
+    current_score = expand_strategy(input_dataset)
+    max_gain = 0.0
+    best_split_attribute, bestSets = None, None
+    for col in range(len(input_dataset[0]) - 1):
+        column_values = [row[col] for row in input_dataset]
         for value in column_values:
-            (set1, set2) = build_subset(rows, col, value)
-            p = float(len(set1)) / len(rows)
-            gain = currentScore - p * grow_strategy(set1) - (1 - p) * grow_strategy(set2)
-            if gain > bestGain and len(set1) > 0 and len(set2) > 0:
-                bestGain = gain
-                bestAttribute = (col, value)
+            (set1, set2) = build_subset(input_dataset, col, value)
+            p = float(len(set1)) / len(input_dataset)
+            gain = current_score - p * expand_strategy(set1) - (1 - p) * expand_strategy(set2)
+            if gain > max_gain and len(set1) > 0 and len(set2) > 0:
+                max_gain = gain
+                best_split_attribute = (col, value)
                 bestSets = (set1, set2)
 
-    if bestGain > 0:
-        left_child = build_decision_tree(bestSets[0], grow_strategy)
-        right_child = build_decision_tree(bestSets[1], grow_strategy)
-        return C45(col=bestAttribute[0], value=bestAttribute[1], left_child=left_child,
+    if max_gain > 0:
+        left_child = build_decision_tree(bestSets[0], expand_strategy)
+        right_child = build_decision_tree(bestSets[1], expand_strategy)
+        return C45(col=best_split_attribute[0], value=best_split_attribute[1], left_child=left_child,
                    right_child=right_child)
     else:
-        return C45(label=occurences(rows))
+        return C45(label=occurences(input_dataset))
 
 
 missing = False
@@ -297,13 +296,29 @@ def print_decision_tree(tree: C45, indent=" "):
     if tree.node_label is not None:  # leaf node
         return str(tree.node_label)
     else:
-        if numeric(tree.value.strip()):
-            decision = "Column {0}:  ** {1} <= x **".format(tree.class_feature_index, tree.value)
-        else:
-            decision = "Column {0}: ** x == {1} ** ".format(tree.class_feature_index, tree.value)
-        left_child = indent + 'yes -> ' + print_decision_tree(tree.left_child, indent + "    ")
-        right_child = indent + 'no  -> ' + print_decision_tree(tree.right_child, indent + "    ")
+        decision = decision_node_string(tree)
+        left_child = child_string(indent, tree.left_child, "yes : ")
+        right_child = child_string(indent, tree.right_child, "no : ")
         return decision + '\n' + left_child + '\n' + right_child
+
+
+def child_string(indent: str, child, val):
+    """
+    Child string representation helper method
+    :param indent: spacing
+    :param child: take a wild guess
+    :param val: yes/no
+    :return: STRING
+    """
+    return indent + val + print_decision_tree(child, indent + "    ")
+
+
+def decision_node_string(tree):
+    if numeric(tree.value.strip()):
+        decision = "Column {0}:  ** {1} <= x **".format(tree.class_feature_index, tree.value)
+    else:
+        decision = "Column {0}: ** x == {1} ** ".format(tree.class_feature_index, tree.value)
+    return decision
 
 
 def load_data(file: str):
@@ -359,7 +374,7 @@ def test1():
     trainingData = load_data('car.data')
     decisionTree = build_decision_tree(trainingData)
     print(print_decision_tree(decisionTree))
-    print("##################################PRUNED######################################################")
+    print("##########################################PRUNED################################################")
     prune_tree(decisionTree, 0.5, debug=True)
     print(print_decision_tree(decisionTree))
     print("################################################################################################")
