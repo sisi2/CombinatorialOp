@@ -165,21 +165,31 @@ def build_decision_tree(rows: [[]], grow_strategy=entropy):
         return C45(label=occurences(rows))
 
 
-def classify_no_missing(observations, tree: C45):
+missing = False
+
+
+def classify(input_set, tree: C45):
     """
     Classify data
-    :param observations: 
+    :param input_set: 
     :param tree: 
     :return: 
     """
-    # TODO missing data
+    global missing
+    if missing:
+        return classify_missing(input_set, tree)
+    else:
+        return classify_not_missing(input_set, tree)
+
+
+def classify_not_missing(input_set, tree):
     if tree.node_label is not None:  # leaf node
         out = ""
         for i in set(tree.node_label.keys()):
             out = i
         return out
     else:
-        values = observations[tree.class_feature_index]
+        values = input_set[tree.class_feature_index]
         branch = None
 
         if numeric(values):  # handle numerical values
@@ -194,10 +204,15 @@ def classify_no_missing(observations, tree: C45):
                 branch = tree.left_child
             else:
                 branch = tree.right_child
-        return classify_no_missing(observations, branch)
+        return classify(input_set, branch)
 
 
 def numeric(value) -> bool:
+    """
+    Determine current value is numeric or not
+    :param value:  target  value
+    :return: bool is numeric yes/no -> true/false
+    """
     try:
         int(value)
         return True
@@ -209,19 +224,25 @@ def numeric(value) -> bool:
             return False
 
 
-def classify_missing(observations, tree: C45):
+def classify_missing(input_set, tree: C45):
+    """
+    Classification with missing data
+    :param input_set: 
+    :param tree: 
+    :return: 
+    """
     if tree.node_label is not None:  # leaf
         return tree.results
     else:
-        values = observations[tree.col]
-        if values is None or values == "?": # our dataset
-            left_row = classify_missing(observations, tree.trueBranch)
-            right_row = classify_missing(observations, tree.falseBranch)
+        values = input_set[tree.col]
+        if values == "?":  # our dataset
+            left_row = classify_missing(input_set, tree.left_child)
+            right_row = classify_missing(input_set, tree.right_child)
             left_child_values = sum(left_row.values())
             right_child_values = sum(right_row.values())
             left_child_weights = float(left_child_values) / (left_child_values + right_child_values)
             right_child_wheights = float(right_child_values) / (left_child_values + right_child_values)
-            out = collections.defaultdict(int)
+            out = collections.defaultdict(int)  # initialize empty dictionary
             for key, values in left_row.items(): out[key] += values * left_child_weights
             for key, values in right_row.items(): out[key] += values * right_child_wheights
             return dict(out)
@@ -237,7 +258,7 @@ def classify_missing(observations, tree: C45):
                     branch = tree.left_child
                 else:
                     branch = tree.falseBranch
-        return classify_missing(observations, branch)
+        return classify_missing(input_set, branch)
 
 
 def prune_tree(tree: C45, minGain: float, valuation_function=entropy, debug=False) -> None:
@@ -343,7 +364,7 @@ def test1():
     print(print_decision_tree(decisionTree))
     print("################################################################################################")
     print("For: " + " ".join(i for i in ["low", "high", "2", "4", "med", "low"]) + " result should be unacc")
-    print(classify_no_missing(["low", "high", "2", "4", "med", "low"], decisionTree))  # should be unacc
+    print(classify(["low", "high", "2", "4", "med", "low"], decisionTree))  # should be unacc
     # print("For : " + " ".join(i for i in ["vhigh", "med", "2", "4", "big", "high", "acc"]) + " result should be acc")
     # print(classify(["vhigh", "med", "2", "4", "big", "high", "acc"], decisionTree))  # should be acc
 
@@ -357,7 +378,7 @@ def build_save_tree():
 def load_tree_and_classify():
     tree = load_tree("cars.tree")
     prune_tree(tree, 0.5, debug=True)
-    print(classify_no_missing(["low", "high", "2", "4", "med", "low"], tree))  # should be unacc
+    print(classify(["low", "high", "2", "4", "med", "low"], tree))  # should be unacc
 
 
 def load_tree_and_classify2():
@@ -372,7 +393,7 @@ def load_tree_and_classify2():
         ll.append(data[j])
     for i in ll:
         print("Test data: ", str(i[0]))
-        print("Output of the test: \"", classify_no_missing(i[0], tree), "\"", " should get ", "\"", i[1], "\"")
+        print("Output of the test: \"", classify(i[0], tree), "\"", " should get ", "\"", i[1], "\"")
         # print(classify(["low", "high", "2", "4", "med", "low"], tree))  # should be unacc
 
 

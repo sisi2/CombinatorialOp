@@ -241,7 +241,7 @@ class window(QMainWindow):
                 prediction = self.tree.decide(to_predict)
                 self.output_label.setText(prediction)
             elif self.radio_button_C45.isChecked():
-                prediction = classify_no_missing(to_predict, self.tree)
+                prediction = classify(to_predict, self.tree)
                 self.output_label.setText(prediction)
         except:
             self.output_label.setText("Error")
