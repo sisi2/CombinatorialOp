@@ -144,10 +144,10 @@ def build_decision_tree(rows: [[]], grow_strategy=entropy):
     currentScore = grow_strategy(rows)
     bestGain = 0.0
     bestAttribute, bestSets = None, None
-    columnCount = len(rows[0]) - 1  # only data without class features
-    for col in range(0, columnCount):
-        columnValues = [row[col] for row in rows]
-        for value in columnValues:
+    # column_count = len(rows[0]) - 1  # only data without class features
+    for col in range(len(rows[0]) - 1):
+        column_values = [row[col] for row in rows]
+        for value in column_values:
             (set1, set2) = build_subset(rows, col, value)
             p = float(len(set1)) / len(rows)
             gain = currentScore - p * grow_strategy(set1) - (1 - p) * grow_strategy(set2)
@@ -157,10 +157,10 @@ def build_decision_tree(rows: [[]], grow_strategy=entropy):
                 bestSets = (set1, set2)
 
     if bestGain > 0:
-        trueBranch = build_decision_tree(bestSets[0], grow_strategy)
-        falseBranch = build_decision_tree(bestSets[1], grow_strategy)
-        return C45(col=bestAttribute[0], value=bestAttribute[1], left_child=trueBranch,
-                   right_child=falseBranch)
+        left_child = build_decision_tree(bestSets[0], grow_strategy)
+        right_child = build_decision_tree(bestSets[1], grow_strategy)
+        return C45(col=bestAttribute[0], value=bestAttribute[1], left_child=left_child,
+                   right_child=right_child)
     else:
         return C45(label=occurences(rows))
 
@@ -183,7 +183,8 @@ def classify_no_missing(observations, tree: C45):
         branch = None
 
         if numeric(values):  # handle numerical values
-            if tree.value <= values:
+            print("ding")
+            if float(tree.value) <= float(values):
                 branch = tree.left_child
             else:
                 branch = tree.right_child
@@ -194,7 +195,7 @@ def classify_no_missing(observations, tree: C45):
                 branch = tree.left_child
             else:
                 branch = tree.right_child
-            return classify_no_missing(observations, branch)
+        return classify_no_missing(observations, branch)
 
 
 def numeric(value) -> bool:
@@ -377,5 +378,5 @@ def load_tree_and_classify2():
 
 
 if __name__ == '__main__':
-    # build_save_tree()
+    build_save_tree()
     load_tree_and_classify2()
