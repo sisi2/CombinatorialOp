@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2017.1.7)  29 MAY 2017 00:22
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2017.1.7)  29 MAY 2017 00:25
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -944,16 +944,15 @@ Package pdftex.def Info: logo.jpg used on input line 128.
 (pdftex.def)             Requested size: 865.0698pt x 133.69916pt.
  [6
 
-]
+] (./id3.tex
 File: logo.jpg Graphic file (type jpg)
  <use logo.jpg>
-Package pdftex.def Info: logo.jpg used on input line 138.
+Package pdftex.def Info: logo.jpg used on input line 9.
 (pdftex.def)             Requested size: 865.0698pt x 133.69916pt.
  [7
 
-] (./c45.tex
+]) (./c45.tex
 File: logo.jpg Graphic file (type jpg)
-
 <use logo.jpg>
 Package pdftex.def Info: logo.jpg used on input line 12.
 (pdftex.def)             Requested size: 865.0698pt x 133.69916pt.
@@ -992,14 +991,14 @@ Package pdftex.def Info: logo.jpg used on input line 100.
 ])
 File: logo.jpg Graphic file (type jpg)
  <use logo.jpg>
-Package pdftex.def Info: logo.jpg used on input line 145.
+Package pdftex.def Info: logo.jpg used on input line 137.
 (pdftex.def)             Requested size: 865.0698pt x 133.69916pt.
  [13
 
 ]
 File: logo.jpg Graphic file (type jpg)
  <use logo.jpg>
-Package pdftex.def Info: logo.jpg used on input line 150.
+Package pdftex.def Info: logo.jpg used on input line 142.
 (pdftex.def)             Requested size: 865.0698pt x 133.69916pt.
  [14
 
@@ -1013,11 +1012,11 @@ Package pdftex.def Info: logo.jpg used on input line 150.
 \tf@snm=\write8
 \openout8 = `slides.snm'.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 152.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 152.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 144.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 144.
  (./slides.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 152.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 152.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 144.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 144.
 Package rerunfilecheck Info: File `slides.out' has not changed.
 (rerunfilecheck)             Checksum: 4CA0FF56E3EE124326A4720E136735D1;47.
 
@@ -1025,11 +1024,11 @@ Package rerunfilecheck Info: File `slides.out' has not changed.
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 1.0pt have occurred.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 152.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 144.
  ) 
 Here is how much of TeX's memory you used:
- 16721 strings out of 494399
- 318509 string characters out of 6172184
+ 16724 strings out of 494399
+ 318528 string characters out of 6172184
  390012 words of memory out of 5000000
  19606 multiletter control sequences out of 15000+600000
  12616 words of font info for 47 fonts, out of 8000000 for 9000
