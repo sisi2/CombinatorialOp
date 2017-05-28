@@ -260,27 +260,27 @@ def classify_missing(input_set, tree: C45):
         return classify_missing(input_set, branch)
 
 
-def prune_tree(tree: C45, minGain: float, valuation_function=entropy, debug=False) -> None:
+def prune_tree(tree: C45, confidence: float, debug=False) -> None:
     """
     Recursively prune each subtree using 
     :param tree: target tree
-    :param minGain: sentinel
+    :param confidence: confidence in the subtree
     :param valuation_function: what function to use for evaluation
     :param debug: print status to terminal
     :return: 
     """
     if tree.left_child.node_label is None:  # internal node
-        prune_tree(tree.left_child, minGain, valuation_function, debug)
+        prune_tree(tree.left_child, confidence, valuation_function, debug)
     if tree.right_child.node_label is None:  # internal node
-        prune_tree(tree.right_child, minGain, valuation_function, debug)
+        prune_tree(tree.right_child, confidence, valuation_function, debug)
     if tree.left_child.node_label is not None and tree.right_child.node_label is not None:  # both nodes are leaves
         lchild, rchild = [], []
         for values, columns in tree.left_child.node_label.items(): lchild += [[values]] * columns
         for values, columns in tree.right_child.node_label.items(): rchild += [[values]] * columns
         p = float(len(lchild)) / len(lchild + rchild)
-        delta = valuation_function(lchild + rchild) - p * valuation_function(lchild) - (1 - p) * valuation_function(
+        delta = entropy(lchild + rchild) - p * entropy(lchild) - (1 - p) * entropy(
             rchild)
-        if delta < minGain:  # border between pruning
+        if delta < confidence:  # border between pruning
             if debug: print('The branch was pruned with gain = {0}'.format(delta))
             tree.left_child, tree.right_child = None, None
             tree.results = occurences(lchild + rchild)

@@ -79,7 +79,11 @@
 \end{itemize}
 \end{itemize}
 \end{frame}
-\begin{frame}
+
+
+
+
+\begin{frame}[allowframebreaks]
 \frametitle{C4.5}
 \begin{itemize}
 \item Simplifying a tree
@@ -96,5 +100,31 @@
 \vfill
 \end{itemize}
 \end{itemize}
+\item 2 strategies:
+\vfill
+\begin{itemize}
+\item Pre-prune
+\vfill
+\begin{itemize}
+\item Using statistical signifiance
+\vfill
+\item $\rightarrow$ stop growing/building when no statistical significant association between any attribute and class at a node
+\vfill
+\item chi-squared test ( too much statistics for us)
+\vfill
+\item Pre-pruning may stop growing prematurely (eg. XOR stops at root node)
+\vfill
+\end{itemize}
+\framebreak
+\item Post-prune
+\end{itemize}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Pruning}
+\begin{itemize}
+\item It's too complicated
 \end{itemize}
 \end{frame}
