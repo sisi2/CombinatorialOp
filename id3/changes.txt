@@ -1,0 +1,2 @@
+self.n -> self.columns
+self.nr =
