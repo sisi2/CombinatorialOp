@@ -149,16 +149,76 @@ ID3 versus C4.5}
 \item Tree can be simplified
 \end{itemize}
 \end{frame}
+
+\begin{frame}[allowframebreaks]
+\frametitle{Missing data}
+\begin{center}
+%\includegraphics[scale=.1]{Images/DecisionTree.png}
+
+2,*,*,*,*,*,2\\
+1,2,*,*,*,*,1\\
+1,1,2,*,*,*,1\\
+1,1,1,*,*,*,1\\
+1,1,3,2,2,*,1\\
+1,*,*,*,*,4,1\\
+2,1,4,*,*,1,1\\
+2,1,4,*,*,2,1\\
+2,1,4,*,*,3,1\\
+2,1,3,1,1,1,1\\
+2,1,3,1,1,2,1\\
+2,1,3,1,2,1,1\\
+2,1,3,1,2,2,1\\
+1,1,3,1,1,3,1\\
+2,1,3,1,2,3,1
+\end{center}
+
+\begin{itemize}
+\item Dataypes can co-exist (eg. strings, integer/float)
+\vfill
+\item Solutions
+\begin{itemize}
+\item Replace missing values in column with most frequent
+\item For numerical values replace with mean/mode/median
+\end{itemize}
+\item Column 2:
+\begin{itemize}
+\item No instances = 15
+\item Card(2) = 1
+\item Card(1) = 12
+\item $\rightarrow$ safest choice replace missing values with 1 
+\end{itemize}
+\item Column 3:
+\begin{itemize}
+\item No instances = 15 (of course)
+\item Card(2) = 1 
+\item Card(1) = 1
+\item Card(3) = 7
+\item Card(4) = 3
+\item Missing = 3
+\item $\rightarrow$ replace missing values with 3
+\end{itemize}
+
+
+
+\end{itemize}
+
+
+\end{frame}
+
+
+
+
+
+
+
+
+
 \begin{frame}
 \frametitle{C4.5}
 
 \end{frame}
 
 
-\begin{frame}
-\frametitle{Missing data}
-
-\end{frame}
 
 
 
