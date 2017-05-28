@@ -157,15 +157,15 @@ def build_decision_tree(rows: [[]], grow_strategy=entropy):
                 bestSets = (set1, set2)
 
     if bestGain > 0:
-        trueBranch = build_decision_tree(bestSets[0])
-        falseBranch = build_decision_tree(bestSets[1])
+        trueBranch = build_decision_tree(bestSets[0], grow_strategy)
+        falseBranch = build_decision_tree(bestSets[1], grow_strategy)
         return C45(col=bestAttribute[0], value=bestAttribute[1], left_child=trueBranch,
                    right_child=falseBranch)
     else:
         return C45(label=occurences(rows))
 
 
-def classify(observations, tree: C45):
+def classify_no_missing(observations, tree: C45):
     """
     Classify data
     :param observations: 
@@ -173,19 +173,71 @@ def classify(observations, tree: C45):
     :return: 
     """
     # TODO missing data
-    if tree.node_label is not None:  # leaf
+    if tree.node_label is not None:  # leaf node
         out = ""
-        for i in set(tree.node_label.keys()): out = i
-
+        for i in set(tree.node_label.keys()):
+            out = i
         return out
     else:
         values = observations[tree.class_feature_index]
         branch = None
-        if values == tree.value:
-            branch = tree.left_child
+
+        if numeric(values):  # handle numerical values
+            if tree.value <= values:
+                branch = tree.left_child
+            else:
+                branch = tree.right_child
+
         else:
-            branch = tree.right_child
-        return classify(observations, branch)
+
+            if values == tree.value:
+                branch = tree.left_child
+            else:
+                branch = tree.right_child
+            return classify_no_missing(observations, branch)
+
+
+def numeric(value) -> bool:
+    try:
+        int(value)
+        return True
+    except:
+        try:
+            float(value)
+            return True
+        except:
+            return False
+
+
+def classify_missing(observations, tree: C45):
+    if tree.node_label is not None:  # leaf
+        return tree.results
+    else:
+        values = observations[tree.col]
+        if values is None or values == "?": # our dataset
+            left_row = classify_missing(observations, tree.trueBranch)
+            right_row = classify_missing(observations, tree.falseBranch)
+            left_child_values = sum(left_row.values())
+            right_child_values = sum(right_row.values())
+            left_child_weights = float(left_child_values) / (left_child_values + right_child_values)
+            right_child_wheights = float(right_child_values) / (left_child_values + right_child_values)
+            out = collections.defaultdict(int)
+            for key, values in left_row.items(): out[key] += values * left_child_weights
+            for key, values in right_row.items(): out[key] += values * right_child_wheights
+            return dict(out)
+        else:
+            branch = None
+            if numeric(values):
+                if tree.value <= values:
+                    branch = tree.left_child
+                else:
+                    branch = tree.right_child
+            else:
+                if values == tree.value:
+                    branch = tree.left_child
+                else:
+                    branch = tree.falseBranch
+        return classify_missing(observations, branch)
 
 
 def prune_tree(tree: C45, minGain: float, valuation_function=entropy, debug=False) -> None:
@@ -214,19 +266,23 @@ def prune_tree(tree: C45, minGain: float, valuation_function=entropy, debug=Fals
             tree.results = occurences(lchild + rchild)
 
 
-def print_decision_tree(decision_tree: C45, indent=''):
+def print_decision_tree(tree: C45, indent=" "):
     """
     Output decision tree
-    :param decision_tree: input dataset  
-    :param indent: spacing
+    :param tree: input dataset  
+    :param indent: spacing for depth
     :return: string formatted tree
     """
-    if decision_tree.node_label is not None:  # leaf node
-        return str(decision_tree.node_label)
-    decision = 'Column %s: x == %s?' % (decision_tree.class_feature_index, decision_tree.node_label)
-    left_child = indent + 'yes -> ' + print_decision_tree(decision_tree.left_child, indent + '     ')
-    right_child = indent + 'no  -> ' + print_decision_tree(decision_tree.right_child, indent + '      ')
-    return decision + '\n' + left_child + '\n' + right_child
+    if tree.node_label is not None:  # leaf node
+        return str(tree.node_label)
+    else:
+        if numeric(tree.value.strip()):
+            decision = "Column {0}:  ** {1} <= x **".format(tree.class_feature_index, tree.value)
+        else:
+            decision = "Column {0}: ** x == {1} ** ".format(tree.class_feature_index, tree.value)
+        left_child = indent + 'yes -> ' + print_decision_tree(tree.left_child, indent + "    ")
+        right_child = indent + 'no  -> ' + print_decision_tree(tree.right_child, indent + "    ")
+        return decision + '\n' + left_child + '\n' + right_child
 
 
 def load_data(file: str):
@@ -287,7 +343,7 @@ def test1():
     print(print_decision_tree(decisionTree))
     print("################################################################################################")
     print("For: " + " ".join(i for i in ["low", "high", "2", "4", "med", "low"]) + " result should be unacc")
-    print(classify(["low", "high", "2", "4", "med", "low"], decisionTree))  # should be unacc
+    print(classify_no_missing(["low", "high", "2", "4", "med", "low"], decisionTree))  # should be unacc
     # print("For : " + " ".join(i for i in ["vhigh", "med", "2", "4", "big", "high", "acc"]) + " result should be acc")
     # print(classify(["vhigh", "med", "2", "4", "big", "high", "acc"], decisionTree))  # should be acc
 
@@ -301,12 +357,13 @@ def build_save_tree():
 def load_tree_and_classify():
     tree = load_tree("cars.tree")
     prune_tree(tree, 0.5, debug=True)
-    print(classify(["low", "high", "2", "4", "med", "low"], tree))  # should be unacc
+    print(classify_no_missing(["low", "high", "2", "4", "med", "low"], tree))  # should be unacc
 
 
 def load_tree_and_classify2():
     tree = load_tree("cars.tree")
     prune_tree(tree, 0.5, debug=True)
+    print(print_decision_tree(tree))
     import random
     data = get_random_test_samples()
     ll = []
@@ -315,10 +372,10 @@ def load_tree_and_classify2():
         ll.append(data[j])
     for i in ll:
         print("Test data: ", str(i[0]))
-        print("Output of the test: \"", classify(i[0], tree), "\"", " should get ", "\"", i[1], "\"")
+        print("Output of the test: \"", classify_no_missing(i[0], tree), "\"", " should get ", "\"", i[1], "\"")
         # print(classify(["low", "high", "2", "4", "med", "low"], tree))  # should be unacc
 
 
 if __name__ == '__main__':
-    build_save_tree()
+    # build_save_tree()
     load_tree_and_classify2()

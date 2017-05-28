@@ -2,7 +2,7 @@ import sys
 from PyQt5.QtGui import QIcon, QColor
 from PyQt5.QtWidgets import QPushButton, QHBoxLayout, QAction, QMessageBox, QRadioButton, QApplication, QMainWindow
 from PyQt5 import QtCore, QtGui, QtWidgets
-from id3.Container import Container
+from ..id3.Container import Container
 from id3.Container import create_subset
 from id3.Tree import learn
 from collections import Counter
@@ -241,7 +241,7 @@ class window(QMainWindow):
                 prediction = self.tree.decide(to_predict)
                 self.output_label.setText(prediction)
             elif self.radio_button_C45.isChecked():
-                prediction = classify(to_predict, self.tree)
+                prediction = classify_no_missing(to_predict, self.tree)
                 self.output_label.setText(prediction)
         except:
             self.output_label.setText("Error")
