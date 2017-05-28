@@ -197,15 +197,27 @@ ID3 versus C4.5}
 \item Missing = 3
 \item $\rightarrow$ replace missing values with 3
 \end{itemize}
-
-
-
 \end{itemize}
-
-
 \end{frame}
 
-
+\begin{frame}
+\frametitle{Numerical \& continuous variables}
+\begin{itemize}
+\item General approach separate categorical and continuous
+\vfill
+\item Our implementation:
+\begin{itemize}
+\vfill
+\item Treat all numerical variables as continuous
+\vfill
+\item C45 implementation based on  a binary tree (computational gain)
+\vfill
+\item $\rightarrow$ Everithing equal or smaller than node value to the left
+\vfill
+\item $\rightarrow$ Everything else to the right
+\end{itemize}
+\end{itemize}
+\end{frame}
 
 
 
