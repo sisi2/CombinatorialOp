@@ -183,7 +183,6 @@ def classify_no_missing(observations, tree: C45):
         branch = None
 
         if numeric(values):  # handle numerical values
-            print("ding")
             if float(tree.value) <= float(values):
                 branch = tree.left_child
             else:
