@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2016.11.28)  29 MAY 2017 10:39
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2016.11.28)  29 MAY 2017 11:39
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -956,26 +956,19 @@ Package pdftex.def Info: logo.jpg used on input line 90.
 File: logo.jpg Graphic file (type jpg)
 
 <use logo.jpg>
-Package pdftex.def Info: logo.jpg used on input line 110.
+Package pdftex.def Info: logo.jpg used on input line 109.
 (pdftex.def)             Requested size: 865.0698pt x 133.69916pt.
  [5
-
-]
-File: logo.jpg Graphic file (type jpg)
- <use logo.jpg>
-Package pdftex.def Info: logo.jpg used on input line 128.
-(pdftex.def)             Requested size: 865.0698pt x 133.69916pt.
- [6
 
 ] (./id3.tex
 File: logo.jpg Graphic file (type jpg)
  <use logo.jpg>
 Package pdftex.def Info: logo.jpg used on input line 25.
 (pdftex.def)             Requested size: 865.0698pt x 133.69916pt.
- [7
+ [6
 
 ]
-<Images/tennis.jpg, id=71, 1057.9525pt x 579.16376pt>
+<Images/tennis.jpg, id=64, 1057.9525pt x 579.16376pt>
 File: Images/tennis.jpg Graphic file (type jpg)
  <use Images/tennis.jpg>
 Package pdftex.def Info: Images/tennis.jpg used on input line 33.
@@ -989,32 +982,41 @@ File: logo.jpg Graphic file (type jpg)
 <use logo.jpg>
 Package pdftex.def Info: logo.jpg used on input line 33.
 (pdftex.def)             Requested size: 865.0698pt x 133.69916pt.
- [8
+ [7
 
  <./Images/tennis.jpg>]
+File: Images/DecisionTree.png Graphic file (type png)
+ <use Images/DecisionTree.png>
+Package pdftex.def Info: Images/DecisionTree.png used on input line 42.
+(pdftex.def)             Requested size: 283.85547pt x 217.20764pt.
 File: logo.jpg Graphic file (type jpg)
- <use logo.jpg>
-Package pdftex.def Info: logo.jpg used on input line 52.
+
+<use logo.jpg>
+Package pdftex.def Info: logo.jpg used on input line 42.
 (pdftex.def)             Requested size: 865.0698pt x 133.69916pt.
- [9
+ [8
 
 ]
 File: logo.jpg Graphic file (type jpg)
  <use logo.jpg>
 Package pdftex.def Info: logo.jpg used on input line 61.
 (pdftex.def)             Requested size: 865.0698pt x 133.69916pt.
-
-[10
+ [9
 
 ]
-Missing character: There is no â in font cmss10!
-Missing character: There is no € in font cmss10!
-Missing character: There is no “ in font cmss10!
 File: logo.jpg Graphic file (type jpg)
  <use logo.jpg>
-Package pdftex.def Info: logo.jpg used on input line 86.
+Package pdftex.def Info: logo.jpg used on input line 70.
 (pdftex.def)             Requested size: 865.0698pt x 133.69916pt.
- [11
+ [10
+
+]
+File: logo.jpg Graphic file (type jpg)
+ <use logo.jpg>
+Package pdftex.def Info: logo.jpg used on input line 90.
+(pdftex.def)             Requested size: 865.0698pt x 133.69916pt.
+
+[11
 
 ]) (./c45.tex
 File: logo.jpg Graphic file (type jpg)
@@ -1026,59 +1028,58 @@ Package pdftex.def Info: logo.jpg used on input line 12.
 ]
 File: logo.jpg Graphic file (type jpg)
  <use logo.jpg>
-Package pdftex.def Info: logo.jpg used on input line 62.
+Package pdftex.def Info: logo.jpg used on input line 52.
 (pdftex.def)             Requested size: 865.0698pt x 133.69916pt.
-
-[13
+ [13
 
 ]
 File: logo.jpg Graphic file (type jpg)
  <use logo.jpg>
-Package pdftex.def Info: logo.jpg used on input line 62.
+Package pdftex.def Info: logo.jpg used on input line 52.
 (pdftex.def)             Requested size: 865.0698pt x 133.69916pt.
- [14
+
+[14
 
 
 ]
 File: logo.jpg Graphic file (type jpg)
  <use logo.jpg>
-Package pdftex.def Info: logo.jpg used on input line 81.
+Package pdftex.def Info: logo.jpg used on input line 71.
 (pdftex.def)             Requested size: 865.0698pt x 133.69916pt.
  [15
 
 ]
 File: logo.jpg Graphic file (type jpg)
  <use logo.jpg>
-Package pdftex.def Info: logo.jpg used on input line 141.
+Package pdftex.def Info: logo.jpg used on input line 131.
 (pdftex.def)             Requested size: 865.0698pt x 133.69916pt.
  [16
 
 ]
 File: logo.jpg Graphic file (type jpg)
-
-<use logo.jpg>
-Package pdftex.def Info: logo.jpg used on input line 141.
+ <use logo.jpg>
+Package pdftex.def Info: logo.jpg used on input line 131.
 (pdftex.def)             Requested size: 865.0698pt x 133.69916pt.
  [17
 
 
 ]
 File: logo.jpg Graphic file (type jpg)
- <use logo.jpg>
-Package pdftex.def Info: logo.jpg used on input line 158.
+
+<use logo.jpg>
+Package pdftex.def Info: logo.jpg used on input line 148.
 (pdftex.def)             Requested size: 865.0698pt x 133.69916pt.
  [18
 
-])
-<Images/demo2.png, id=130, 730.73pt x 350.30875pt>
+]) <Images/demo2.png, id=130, 730.73pt x 350.30875pt>
 File: Images/demo2.png Graphic file (type png)
- <use Images/demo2.png>
-Package pdftex.def Info: Images/demo2.png used on input line 140.
+
+<use Images/demo2.png>
+Package pdftex.def Info: Images/demo2.png used on input line 121.
 (pdftex.def)             Requested size: 255.75932pt x 122.6099pt.
 File: logo.jpg Graphic file (type jpg)
-
-<use logo.jpg>
-Package pdftex.def Info: logo.jpg used on input line 140.
+ <use logo.jpg>
+Package pdftex.def Info: logo.jpg used on input line 121.
 (pdftex.def)             Requested size: 865.0698pt x 133.69916pt.
  [19
 
@@ -1092,11 +1093,11 @@ Package pdftex.def Info: logo.jpg used on input line 140.
 \tf@snm=\write8
 \openout8 = `slides.snm'.
 
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 141.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 141.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 122.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 122.
  (./slides.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 141.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 141.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 122.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 122.
 Package rerunfilecheck Info: File `slides.out' has not changed.
 (rerunfilecheck)             Checksum: 4CA0FF56E3EE124326A4720E136735D1;47.
 
@@ -1104,13 +1105,13 @@ Package rerunfilecheck Info: File `slides.out' has not changed.
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 1.0pt have occurred.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 141.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 122.
  ) 
 Here is how much of TeX's memory you used:
- 16907 strings out of 493029
- 322378 string characters out of 6136233
- 398141 words of memory out of 5000000
- 19995 multiletter control sequences out of 15000+600000
+ 16905 strings out of 493029
+ 322362 string characters out of 6136233
+ 397141 words of memory out of 5000000
+ 19993 multiletter control sequences out of 15000+600000
  16487 words of font info for 60 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  56i,16n,56p,406b,551s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1128,7 +1129,7 @@ s/cm/cmsy7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cm
 sy9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msam
 10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msam7
 .pfb>
-Output written on slides.pdf (19 pages, 415141 bytes).
+Output written on slides.pdf (19 pages, 414161 bytes).
 PDF statistics:
  197 PDF objects out of 1000 (max. 8388607)
  148 compressed objects within 2 object streams
