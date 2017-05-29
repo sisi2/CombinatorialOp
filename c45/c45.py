@@ -20,6 +20,8 @@ class Stack:
     def size(self):
         return len(self.items)
 
+    def get(self): return self.items
+
 
 class C45:
     """
@@ -292,7 +294,7 @@ def prune_tree(tree: C45, confidence: float, debug=False) -> None:
     if tree.left_child.node_label is None:  # internal node
         prune_tree(tree.left_child, confidence, debug)
     if tree.right_child.node_label is None:  # internal node
-        prune_tree(tree.right_child, confidence,  debug)
+        prune_tree(tree.right_child, confidence, debug)
     if tree.left_child.node_label is not None and tree.right_child.node_label is not None:  # both nodes are leaves
         lchild, rchild = [], []
         for values, columns in tree.left_child.node_label.items(): lchild += [[values]] * columns
@@ -343,6 +345,36 @@ def child_string(indent: str, child, val):
     :return: STRING
     """
     return indent + val + print_decision_tree(child, indent + "    ")
+
+
+def create_viz():
+    import graphviz as gv
+    global stk
+    nodes = stk.get()  # got a list [left_child,right_child,parent]
+    print("nodes in the muthafukka", len(nodes))
+    graph = gv.Digraph(format="png")
+    for i in range(0, len(nodes), 2):
+        try:
+            graph.node(str(nodes[i + 2].value))
+        except:
+            pass
+        try:
+            graph.node(str(nodes[i + 1].value))
+        except:
+            pass
+        try:
+            graph.node(str(nodes[i].value))
+        except:
+            pass
+        try:
+            graph.edge(str(nodes[i + 2].value), str(nodes[i + 1].value))
+        except:
+            pass
+        try:
+            graph.edge(str(nodes[i + 2].value), str(nodes[i].value))
+        except:
+            pass
+    graph.render("test")
 
 
 def decision_node_string(tree):
@@ -446,6 +478,8 @@ def load_tree_and_classify2():
     global stk
     print(stk.size())
 
+
 if __name__ == '__main__':
-    build_save_tree()
+    # build_save_tree()
     load_tree_and_classify2()
+    create_viz()
