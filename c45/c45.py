@@ -1,6 +1,26 @@
 from math import log
 
 
+class Stack:
+    def __init__(self):
+        self.items = []
+
+    def isEmpty(self):
+        return self.items == []
+
+    def push(self, item):
+        self.items.append(item)
+
+    def pop(self):
+        return self.items.pop()
+
+    def peek(self):
+        return self.items[len(self.items) - 1]
+
+    def size(self):
+        return len(self.items)
+
+
 class C45:
     """
     Class implementing a C4.5 decision tree
@@ -270,9 +290,9 @@ def prune_tree(tree: C45, confidence: float, debug=False) -> None:
     :return: 
     """
     if tree.left_child.node_label is None:  # internal node
-        prune_tree(tree.left_child, confidence, valuation_function, debug)
+        prune_tree(tree.left_child, confidence, debug)
     if tree.right_child.node_label is None:  # internal node
-        prune_tree(tree.right_child, confidence, valuation_function, debug)
+        prune_tree(tree.right_child, confidence,  debug)
     if tree.left_child.node_label is not None and tree.right_child.node_label is not None:  # both nodes are leaves
         lchild, rchild = [], []
         for values, columns in tree.left_child.node_label.items(): lchild += [[values]] * columns
@@ -300,6 +320,18 @@ def print_decision_tree(tree: C45, indent=" "):
         left_child = child_string(indent, tree.left_child, "yes : ")
         right_child = child_string(indent, tree.right_child, "no : ")
         return decision + '\n' + left_child + '\n' + right_child
+
+
+stk = Stack()
+
+
+def store_d_t(tree):
+    global stk
+    if tree.left_child is not None:
+        store_d_t(tree.left_child)
+    if tree.right_child is not None:
+        store_d_t(tree.right_child)
+    stk.push(tree)
 
 
 def child_string(indent: str, child, val):
@@ -410,7 +442,9 @@ def load_tree_and_classify2():
         print("Test data: ", str(i[0]))
         print("Output of the test: \"", classify(i[0], tree), "\"", " should get ", "\"", i[1], "\"")
         # print(classify(["low", "high", "2", "4", "med", "low"], tree))  # should be unacc
-
+    store_d_t(tree)
+    global stk
+    print(stk.size())
 
 if __name__ == '__main__':
     build_save_tree()
