@@ -2,9 +2,8 @@
 \usepackage{amsmath}
 \usepackage{color}
 \usepackage{ulb}
-\title{Implementation of Decision Tree Classifiers\\
-ID3 versus C4.5}
-\author{Depuydt Antoine\\ Dany Efila \\Mudura Mircea}
+\title{ BRANCH AND BOUND}
+\author{Dany Efila }
 
 \date{May, 2017}
 \begin{document}
@@ -17,100 +16,24 @@ ID3 versus C4.5}
     \insertframenumber/\inserttotalframenumber
 }
 
-\section{Introduction}
+\section{Branch and Bound Algorithm}
 \begin{frame}
 \frametitle{Introduction}
 \begin{itemize}
-\item Data mining: compress, understand and predict
+\item Pinciples
 	\vfill
 	\begin{itemize}
-		\item Clustering
+		\item 
 		\vfill
-		\item Classification
+		\item Branch : Divides into small subsets 
 		\vfill
-		\item Regression
+		\item Bound : computes bounds of each subset separetly
 		\vfill
-		\item ...
-	\end{itemize}
-\vfill
-\item Techniques to find links
-	\vfill
-	\begin{itemize}
-		\item Linear Regression
+		\item Pruning : Discard subset that can not improve the upper bound
 		\vfill
-		\item Decision Trees
-		\vfill
-		\item Neural Networks
-		\vfill
-		\item ...
-	\end{itemize}
-\end{itemize}
-\end{frame}
-
-
-\begin{frame}
-\frametitle{Classification}
-	\begin{itemize}
-		\item Classical example: play tennis today?
-		\vfill
-		\begin{itemize}
-			\item \textbf{Features}:
-			\begin{itemize}
-				\item Outlook: sunny, overcast, rainy
-				\vfill
-				\item Temperature: hot, cool, cold
-				\vfill
-				\item Wind: high, weak
-				\vfill
-				\item Humidity: high, normal
-			\end{itemize}
-			\vfill
-			\item \textbf{Class labels}:
-				\begin{itemize}
-				\item Yes
-				\vfill
-				\item No
-				\end{itemize}			
-
-		\end{itemize}
+		\item Solution : Find the optimal solution amoung the candidate ones
 	\end{itemize}
 \end{frame}
-
-\begin{frame}
-\frametitle{Decision Tree}
-	\begin{itemize}
-		\item Visual model, easily understandable
-		\vfill
-		\item Model: tree with \color{blue}decision \color{black}and \color{green}leaf nodes \color{black}
-	\end{itemize}
-	\begin{center}
-		\includegraphics[scale=0.35]{Images/DecisionTree.png}
-	\end{center}
-
-\end{frame}
-
-
-
-\begin{frame}
-\frametitle{ID3 versus C4.5}
-	\begin{itemize}
-		\item Goal: implement ID3 and C4.5 algorithms
-		\vfill
-		\item Objectives: compare ID3 and C4.5 output
-		\vfill
-		\begin{itemize}
-			\item Compare ID3 and C4.5
-			\vfill
-			\item Create an application that classifies any data using both algorithms
-		\end{itemize}
-
-	\end{itemize}
-
-\end{frame}
-
-\input{id3}
-
-\input{c45}
 
 
 \begin{frame}
